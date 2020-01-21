@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.book.system.org.dao.OrgUserMapper">
+
+    <resultMap id="BaseResultMap" type="cn.zealon.book.system.org.entity.OrgUser">
+        <id column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+        <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+        <result column="sort_number" jdbcType="INTEGER" property="sortNumber" />
+        <result column="freeze_status" jdbcType="INTEGER" property="freezeStatus" />
+        <result column="sys_attachment_portrait" jdbcType="CHAR" property="sysAttachmentPortrait" />
+        <result column="creater" jdbcType="VARCHAR" property="creater" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      user_id, dept_id, user_pwd, user_name, phone_number, sort_number, sys_attachment_portrait,
+      creater, create_time, update_time, updater ,freeze_status
+    </sql>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+      delete from org_user
+      where user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="cn.zealon.book.system.org.entity.OrgUser">
+      insert into org_user (user_id, dept_id, user_pwd,
+        user_name, phone_number, sort_number, freeze_status,
+        sys_attachment_portrait, creater, create_time,
+        update_time, updater)
+      values (#{userId,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, #{userPwd,jdbcType=VARCHAR},
+        #{userName,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{sortNumber,jdbcType=INTEGER},
+        #{freezeStatus},
+        #{sysAttachmentPortrait,jdbcType=CHAR}, #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="cn.zealon.book.system.org.entity.OrgUser">
+        update org_user
+        <set>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="userPwd != null">
+                user_pwd = #{userPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneNumber != null">
+                phone_number = #{phoneNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNumber != null">
+                sort_number = #{sortNumber,jdbcType=INTEGER},
+            </if>
+            <if test="freezeStatus != null">
+                freeze_status = #{freezeStatus}
+            </if>
+            <if test="sysAttachmentPortrait != null">
+                sys_attachment_portrait = #{sysAttachmentPortrait,jdbcType=CHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  org_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <sql id="findPageWithWhere">
+        <where> 1=1
+            <if test="keyword != null and keyword != ''" >
+                and (
+                  user_id like CONCAT('%',#{keyword},'%') or user_name like CONCAT('%',#{keyword},'%')
+                  or phone_number like CONCAT('%',#{keyword},'%')
+                )
+            </if>
+            <if test="deptId != null" >
+                and dept_id = #{deptId,jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findPageWithResult" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  org_user
+        <include refid="findPageWithWhere" />
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="findPageWithCount" resultType="Integer">
+        select count(1)
+        from org_user
+        <include refid="findPageWithWhere" />
+    </select>
+</mapper>
