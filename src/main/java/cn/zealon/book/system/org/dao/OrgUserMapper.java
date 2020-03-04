@@ -1,6 +1,7 @@
 package cn.zealon.book.system.org.dao;
 
 import cn.zealon.book.system.org.entity.OrgUser;
+import cn.zealon.book.system.org.vo.OrgUserVO;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public interface OrgUserMapper {
 
     OrgUser selectByUserId(String userId);
 
-    List<OrgUser> findPageWithResult(@Param("keyword") String keyword,
-                                     @Param("deptId") Integer deptId);
+    List<OrgUserVO> findPageWithResult(@Param("keyword") String keyword,
+                                       @Param("deptId") Integer deptId);
 
     Integer findPageWithCount(@Param("keyword") String keyword,
                               @Param("deptId") Integer deptId);

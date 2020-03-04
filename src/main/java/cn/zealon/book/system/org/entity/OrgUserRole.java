@@ -9,34 +9,43 @@ public class OrgUserRole implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private int id;
+	private Integer id;
 
-    private OrgRole orgRole;
+	private String userId;
 
-    private String userid;
+	/**
+	 * 角色
+	 */
+	private Integer roleId;
 
-	public int getId() {
+	public OrgUserRole(){}
+
+	public OrgUserRole(String userId, Integer roleId) {
+		this.userId = userId;
+		this.roleId = roleId;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public OrgRole getOrgRole() {
-		return orgRole;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setOrgRole(OrgRole orgRole) {
-		this.orgRole = orgRole;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getUserid() {
-		return userid;
+	public Integer getRoleId() {
+		return roleId;
 	}
 
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
-
 }

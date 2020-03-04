@@ -1,6 +1,5 @@
 package cn.zealon.book.system.security.service.impl;
 
-import cn.zealon.book.system.org.dao.OrgUserMapper;
 import cn.zealon.book.system.org.entity.OrgUser;
 import cn.zealon.book.system.org.vo.OrgUserVO;
 import cn.zealon.book.system.security.service.LoginService;
@@ -9,7 +8,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,25 +15,16 @@ import java.util.Map;
 /**
  * 系统登录服务类
  * @author zealon
- * @date 2018年12月15日
  */
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {
-	
-	
-	@Autowired
-	private OrgUserMapper orgUserMapper;
-
-	/*@Autowired
-    private SysAttachmentService attachmentService;
-	@Autowired
-	private OrgPermissionService orgPermissionService;*/
 
 	/**
 	 * 登录程序
 	 */
 	@Override
 	public Map<String, Object> doLogin(String loginName, String pwd) {
+
 		Map<String, Object> map = new HashMap<>();
 		boolean success = false;
 		String msg = "";
@@ -50,29 +39,14 @@ public class LoginServiceImpl implements LoginService {
 			Subject subject = SecurityUtils.getSubject();
 
 			if (subject.isAuthenticated()) {
-				msg = "登录成功！";
 				success = true;
-				OrgUser user = (OrgUser) subject.getPrincipal();
-				OrgUser userX=orgUserMapper.selectByUserId(loginName);
-
-				userVO = new OrgUserVO();
-				//userX.setOrgPermission(orgPermissionService.findPermissionRangeByUserid(user.getUserid()));
-				BeanUtils.copyProperties(user,userVO);
 			} else {
 				UsernamePasswordToken token = new UsernamePasswordToken(loginName, pwd);
 				try {
 					// 4、登录，即身份验证
 					subject.login(token);
 					if (subject.isAuthenticated()) {
-						msg = "登录成功！";
 						success = true;
-						OrgUser user = (OrgUser) subject.getPrincipal();
-						OrgUser userX=orgUserMapper.selectByUserId(loginName);
-
-						userVO = new OrgUserVO();
-						//userX.setOrgPermission(orgPermissionService.findPermissionRangeByUserid(user.getUserid()));
-
-						BeanUtils.copyProperties(userX,userVO);
 					}
 				} catch (UnknownAccountException e) {
 					msg = "找不到账户！";
@@ -88,7 +62,15 @@ public class LoginServiceImpl implements LoginService {
 					errorCode = e.toString();
 				}
 			}
+
+			if (success) {
+				msg = "登录成功！";
+				OrgUser user = (OrgUser) subject.getPrincipal();
+				userVO = new OrgUserVO();
+				BeanUtils.copyProperties(user,userVO);
+			}
 		}
+
 		map.put("success", success);
 		map.put("msg", msg);
 		map.put("code", errorCode);

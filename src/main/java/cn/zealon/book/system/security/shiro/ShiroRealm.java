@@ -48,7 +48,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		Object credentials = encrityPwd;
 
 		OrgUser user = userService.selectByUserId(userId);
-		if(user==null){
+		if(user == null){
 			throw new UnknownAccountException("用户不存在！");
 		}
 		//为了实现微信登录暂做修改 如果微信用户与数据库中的用户密码一致，允许登录：user.getUserPwd().equals(password)
@@ -78,11 +78,11 @@ public class ShiroRealm extends AuthorizingRealm {
 		OrgUser user = (OrgUser) principals.getPrimaryPrincipal();
 
 		// 角色
-		Set<String> roles = userService.getRolesByUser(user.getUserId());
+		Set<String> roles = userService.getUserRoles(user.getUserId());
 		authorizationInfo.setRoles(roles);
 
 		// 权限
-		Set<String> permissions = userService.getPermissionsByUser(user.getUserId());
+		Set<String> permissions = userService.getUserPermissions(user.getUserId());
 		authorizationInfo.setStringPermissions(permissions);
 		return authorizationInfo;
 	}

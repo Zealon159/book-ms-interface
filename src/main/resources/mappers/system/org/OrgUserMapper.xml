@@ -58,7 +58,7 @@
                 sort_number = #{sortNumber,jdbcType=INTEGER},
             </if>
             <if test="freezeStatus != null">
-                freeze_status = #{freezeStatus}
+                freeze_status = #{freezeStatus},
             </if>
             <if test="sysAttachmentPortrait != null">
                 sys_attachment_portrait = #{sysAttachmentPortrait,jdbcType=CHAR},
@@ -84,27 +84,31 @@
         <where> 1=1
             <if test="keyword != null and keyword != ''" >
                 and (
-                  user_id like CONCAT('%',#{keyword},'%') or user_name like CONCAT('%',#{keyword},'%')
-                  or phone_number like CONCAT('%',#{keyword},'%')
+                  u.user_id like CONCAT('%',#{keyword},'%') or u.user_name like CONCAT('%',#{keyword},'%')
+                  or u.phone_number like CONCAT('%',#{keyword},'%')
                 )
             </if>
             <if test="deptId != null" >
-                and dept_id = #{deptId,jdbcType=INTEGER}
+                and u.dept_id = #{deptId,jdbcType=INTEGER}
             </if>
         </where>
     </sql>
 
-    <select id="findPageWithResult" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from  org_user
+    <select id="findPageWithResult" resultType="cn.zealon.book.system.org.vo.OrgUserVO">
+        select u.user_id userId, u.dept_id deptId, u.user_name userName, u.phone_number phoneNumber,
+        u.sort_number sortNumber, u.freeze_status freezeStatus,d.name deptName
+        from  org_user u
+        inner join org_dept d
+        on (u.dept_id = d.id)
         <include refid="findPageWithWhere" />
-        limit #{start},#{pageSize}
+        order by u.sort_number
     </select>
 
     <select id="findPageWithCount" resultType="Integer">
         select count(1)
-        from org_user
+        from org_user u
+        inner join org_dept d
+        on (u.dept_id = d.id)
         <include refid="findPageWithWhere" />
     </select>
 </mapper>

@@ -11,14 +11,14 @@ public class SelectVO implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
-    private String id;
+    private Integer id;
     private String text;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class SelectVO implements Serializable {
 
     public SelectVO(){}
 
-    public SelectVO(String id, String text) {
+    public SelectVO(Integer id, String text) {
         this.id = id;
         this.text = text;
     }

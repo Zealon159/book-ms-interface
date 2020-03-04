@@ -1,8 +1,14 @@
 package cn.zealon.book.system.org.service;
 
 import cn.zealon.book.common.base.AbstractBaseService;
+import cn.zealon.book.common.result.Result;
+import cn.zealon.book.common.result.SelectVO;
+import cn.zealon.book.common.result.util.ResultUtil;
+import cn.zealon.book.system.org.dao.OrgDeptMapper;
 import cn.zealon.book.system.org.entity.OrgDept;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 /**
  * 用户部门服务
@@ -12,4 +18,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrgDeptService extends AbstractBaseService<OrgDept> {
 
+    @Autowired
+    private OrgDeptMapper orgDeptMapper;
+
+    /**
+     * 获取下拉数据源
+     * @return
+     */
+    public Result getDeptSelect(){
+        List<SelectVO> selectVOS = this.orgDeptMapper.getDeptSelect();
+        return ResultUtil.successAndNoMsg(selectVOS);
+    }
 }

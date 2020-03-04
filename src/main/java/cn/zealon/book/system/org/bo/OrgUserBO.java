@@ -1,12 +1,16 @@
-package cn.zealon.book.system.org.vo;
-
-import java.util.Map;
+package cn.zealon.book.system.org.bo;
 
 /**
+ * 用户BO
  * @author: zealon
- * @since: 2019/10/30
+ * @since: 2020/2/5
  */
-public class OrgUserVO {
+public class OrgUserBO {
+
+    /**
+     * 用户角色
+     */
+    private Integer[] roles;
 
     /**
      * 用户id
@@ -18,7 +22,10 @@ public class OrgUserVO {
      */
     private Integer deptId;
 
-    private String deptName;
+    /**
+     * 密码
+     */
+    private String userPwd;
 
     /**
      * 中文名
@@ -26,19 +33,26 @@ public class OrgUserVO {
     private String userName;
 
     /**
+     * 联系电话
+     */
+    private String phoneNumber;
+
+    /**
      * 排序
      */
     private Integer sortNumber;
 
-    /**
-     * 冻结状态
-     */
     private Boolean freezeStatus;
 
-    /**
-     * 联系电话
-     */
-    private String phoneNumber;
+    private String sysAttachmentPortrait;
+
+    public Integer[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Integer[] roles) {
+        this.roles = roles;
+    }
 
     public String getUserId() {
         return userId;
@@ -54,6 +68,14 @@ public class OrgUserVO {
 
     public void setDeptId(Integer deptId) {
         this.deptId = deptId;
+    }
+
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
     }
 
     public String getUserName() {
@@ -88,11 +110,11 @@ public class OrgUserVO {
         this.freezeStatus = freezeStatus;
     }
 
-    public String getDeptName() {
-        return deptName;
+    public String getSysAttachmentPortrait() {
+        return sysAttachmentPortrait;
     }
 
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
+    public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
+        this.sysAttachmentPortrait = sysAttachmentPortrait;
     }
 }

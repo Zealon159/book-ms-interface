@@ -28,8 +28,8 @@ spring:
         min-idle: 0
       lettuce:
         pool:
-          max-active: 30
-          max-idle: 30
+          max-active: 10
+          max-idle: 5
           max-wait: -1ms
           min-idle: 0
         shutdown-timeout: 100ms

@@ -4,7 +4,6 @@ import cn.zealon.book.common.base.BaseController;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
 import cn.zealon.book.common.result.Result;
-import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.entity.OrgDept;
 import cn.zealon.book.system.org.service.OrgDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,10 @@ public class OrgDeptController extends BaseController {
 	
 	@Autowired
 	private OrgDeptService orgDeptService;
-	
 
-	@PostMapping("/add")
-	public Result save(@RequestBody OrgDept record){
-		return orgDeptService.save(record);
+	@PostMapping("/create")
+	public Result create(@RequestBody OrgDept record){
+		return orgDeptService.create(record);
 	}
 	
 	@PutMapping("/update")
@@ -44,12 +42,17 @@ public class OrgDeptController extends BaseController {
 		Params p = Params.build(params).cleanEmpty();
 		return orgDeptService.getPageList(p);
 	}
+
+	@GetMapping("/get-select-data")
+	public Result getDeptSelect(){
+		return this.orgDeptService.getDeptSelect();
+	}
 	
 	/**
      * 详情
      */
     @GetMapping("/details")
     public Result details(Integer id){
-        return ResultUtil.success(orgDeptService.findById(id));
+        return orgDeptService.findById(id);
     }
 }

@@ -13,13 +13,13 @@ public class Result implements Serializable {
 	
 	private int code;
     private String msg;
-    private Object obj;
+    private Object data;
     private Map<String,Object> other;
 
-    public Result(int code, String msg, Object obj) {
+    public Result(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
-        this.obj = obj;
+        this.data = data;
     }
     public Result(int code, String msg) {
         this.code = code;
@@ -30,9 +30,25 @@ public class Result implements Serializable {
 
     }
 
+    /**
+     * 构建消息内容
+     * @param msg
+     * @return
+     */
     public Result buildMessage(String msg){
         this.setMsg(msg);
         return this;
+    }
+
+    /**
+     * 构建消息data的值，key默认为data
+     * @param obj data值
+     * @return
+     */
+    public Result buildData(Object obj){
+        this.setData(obj);
+        return this;
+
     }
 
     public int getCode() {
@@ -51,12 +67,12 @@ public class Result implements Serializable {
         this.msg = msg;
     }
 
-    public Object getObj() {
-        return obj;
+    public Object getData() {
+        return data;
     }
 
-    public void setObj(Object obj) {
-        this.obj = obj;
+    public void setData(Object data) {
+        this.data = data;
     }
 
     public Map<String, Object> getOther() {

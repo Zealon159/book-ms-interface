@@ -1,16 +1,17 @@
-package cn.zealon.book.system.org.entity;
+package cn.zealon.book.system.org.vo;
 
 import cn.zealon.book.common.base.BaseEntity;
-import java.util.Date;
 
-public class OrgPermission extends BaseEntity {
+import java.util.List;
+
+public class OrgPermissionEditVO extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 父级id
      */
-    private Integer parentId;
+    private List<String> parentId;
 
     /**
      * 菜单名称
@@ -44,11 +45,11 @@ public class OrgPermission extends BaseEntity {
 
     private Boolean hasChildren;
 
-    public Integer getParentId() {
+    public List<String> getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(List<String> parentId) {
         this.parentId = parentId;
     }
 

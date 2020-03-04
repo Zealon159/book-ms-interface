@@ -1,16 +1,19 @@
-package cn.zealon.book.system.org.entity;
+package cn.zealon.book.system.org.bo;
 
-import cn.zealon.book.common.base.BaseEntity;
-import java.util.Date;
+import java.util.List;
 
-public class OrgPermission extends BaseEntity {
+/**
+ * @author: tangyl
+ * @since: 2020/3/4
+ */
+public class OrgPermissionBO {
 
-    private static final long serialVersionUID = 1L;
+    private Integer id;
 
     /**
      * 父级id
      */
-    private Integer parentId;
+    private List<String> parentId;
 
     /**
      * 菜单名称
@@ -42,13 +45,19 @@ public class OrgPermission extends BaseEntity {
      */
     private Integer sortNumber;
 
-    private Boolean hasChildren;
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getParentId() {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<String> getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(List<String> parentId) {
         this.parentId = parentId;
     }
 
@@ -98,13 +107,5 @@ public class OrgPermission extends BaseEntity {
 
     public void setSortNumber(Integer sortNumber) {
         this.sortNumber = sortNumber;
-    }
-
-    public Boolean getHasChildren() {
-        return hasChildren;
-    }
-
-    public void setHasChildren(Boolean hasChildren) {
-        this.hasChildren = hasChildren;
     }
 }

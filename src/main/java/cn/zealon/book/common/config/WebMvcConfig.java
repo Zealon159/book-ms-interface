@@ -56,11 +56,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
             if (e instanceof NoHandlerFoundException) {
                 result.setCode(HttpCodeEnum.NOT_FOUND.getCode());
                 result.setMsg("服务 [" + request.getRequestURI() + "] 不存在");
-                result.setObj("服务 [" + request.getRequestURI() + "] 不存在");
+                result.setData("服务 [" + request.getRequestURI() + "] 不存在");
             } else if (e instanceof ServletException) {
                 result.setCode(HttpCodeEnum.FAIL.getCode());
                 result.setMsg(e.getMessage());
-                result.setObj(e.getMessage());
+                result.setData(e.getMessage());
             } else if(e instanceof UnauthorizedException){
                 // shiro 无权限异常
                 ModelAndView modelAndView = new ModelAndView();
@@ -71,7 +71,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             } else{
                 result.setCode(HttpCodeEnum.INTERNAL_SERVER_ERROR.getCode());
                 result.setMsg("服务 [" + request.getRequestURI() + "] 内部错误，请联系管理员");
-                result.setObj("服务内部错误，请联系管理员");
+                result.setData("服务内部错误，请联系管理员");
                 String message;
                 if (handler instanceof HandlerMethod) {
                     HandlerMethod handlerMethod = (HandlerMethod) handler;

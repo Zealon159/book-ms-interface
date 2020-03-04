@@ -23,7 +23,7 @@ public abstract class AbstractBaseService<T> implements BaseService<T> {
     protected BaseMapper<T> mapper;
 
     @Override
-    public Result save(T record) {
+    public Result create(T record) {
     	Date date = new Date();
     	BaseEntity r = (BaseEntity)record;
     	r.setCreateTime(date);
@@ -50,7 +50,7 @@ public abstract class AbstractBaseService<T> implements BaseService<T> {
 		r.setUpdateTime(date);
     	r.setUpdater(UserUtil.getCurrentUserId());
 		try {
-			if (mapper.update(record) > 0) {
+			if (mapper.updateByPrimaryKey(record) > 0) {
 				return ResultUtil.success();
 			} else {
 				return ResultUtil.fail();
@@ -77,7 +77,7 @@ public abstract class AbstractBaseService<T> implements BaseService<T> {
 
     @Override
     public Result findById(Integer id) {
-		return ResultUtil.success(mapper.selectById(id));
+		return ResultUtil.successAndNoMsg(mapper.selectById(id));
 	}
 
 	@Override

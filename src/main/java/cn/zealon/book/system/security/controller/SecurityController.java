@@ -45,8 +45,6 @@ public class SecurityController {
         }
         OrgUserVO vo = new OrgUserVO();
         BeanUtils.copyProperties(user, vo);
-        vo.setId(user.getId().longValue());
-
         return ResultUtil.success(vo);
     }
 }

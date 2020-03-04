@@ -60,7 +60,6 @@
     <include refid="Base_Column_List" />
     from org_dept
     order by sort_number
-    limit #{start},#{pageSize}
   </select>
 
 

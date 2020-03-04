@@ -9,7 +9,7 @@ public interface BaseMapper<T>{
 	/** 新增记录 */
 	Integer insert(T record);
 	/** 修改记录 */
-	Integer update(T record);
+	Integer updateByPrimaryKey(T record);
 	/** 按id删除记录 */
 	Integer deleteByPrimaryKey(Integer id);
 	/** 按id查询实体 */

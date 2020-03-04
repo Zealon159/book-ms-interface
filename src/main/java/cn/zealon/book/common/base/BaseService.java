@@ -8,12 +8,13 @@ import cn.zealon.book.common.result.Result;
  * Service 层基础接口，其他Service 接口 请继承该接口
  */
 public interface BaseService<T> {
+
     /**
      * 持久化
      * @param model
      * @return
      */
-	Result save(T model);
+	Result create(T model);
 
     /**
      * 通过主鍵刪除

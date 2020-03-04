@@ -17,6 +17,14 @@ public class ResultUtil {
     }
 
     /**
+     * 请求成功（无消息）
+     * @return
+     */
+    public static Result successAndNoMsg() {
+        return new Result(HttpCodeEnum.OK.getCode(),"");
+    }
+
+    /**
      * 成功请求
      *
      * @param data
@@ -24,6 +32,16 @@ public class ResultUtil {
      */
     public static Result success(Object data) {
         return new Result(HttpCodeEnum.OK.getCode(), HttpCodeEnum.OK.getMessage() , data);
+    }
+
+    /**
+     * 成功请求（无消息）
+     *
+     * @param data
+     * @return
+     */
+    public static Result successAndNoMsg(Object data) {
+        return new Result(HttpCodeEnum.OK.getCode(), "", data);
     }
 
     /**
