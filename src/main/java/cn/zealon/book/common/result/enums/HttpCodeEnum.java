@@ -1,4 +1,4 @@
-package cn.zealon.book.common.enums;
+package cn.zealon.book.common.result.enums;
 
 /**
  * 

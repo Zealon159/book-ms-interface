@@ -1,7 +1,7 @@
 package cn.zealon.book.system.security.controller;
 
 import cn.zealon.book.common.domain.Params;
-import cn.zealon.book.common.enums.HttpCodeEnum;
+import cn.zealon.book.common.result.enums.HttpCodeEnum;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.security.service.impl.LoginServiceImpl;

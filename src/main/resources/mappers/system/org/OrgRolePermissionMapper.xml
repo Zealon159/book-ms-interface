@@ -20,12 +20,12 @@
         </foreach>
     </insert>
 
-    <delete id="deleteByRoleId" parameterType="java.lang.String">
+    <delete id="deleteByRoleId" parameterType="Integer">
       delete from org_role_permission
       where role_id = #{roleId}
     </delete>
 
-    <select id="selectByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByRoleId" parameterType="Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from  org_role_permission

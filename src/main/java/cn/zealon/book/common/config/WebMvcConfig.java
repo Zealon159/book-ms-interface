@@ -1,7 +1,7 @@
 package cn.zealon.book.common.config;
 
 import com.alibaba.fastjson.JSON;
-import cn.zealon.book.common.enums.HttpCodeEnum;
+import cn.zealon.book.common.result.enums.HttpCodeEnum;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.system.security.shiro.util.UserUtil;
 import org.apache.shiro.authz.UnauthorizedException;

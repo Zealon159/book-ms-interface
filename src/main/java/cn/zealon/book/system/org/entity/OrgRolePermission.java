@@ -47,4 +47,10 @@ public class OrgRolePermission implements Serializable {
         this.roleId = roleId;
     }
 
+    public OrgRolePermission(){}
+
+    public OrgRolePermission(Integer permissionId, Integer roleId) {
+        this.permissionId = permissionId;
+        this.roleId = roleId;
+    }
 }

@@ -37,7 +37,7 @@
       values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
         #{type,jdbcType=VARCHAR}, #{resourceUrl,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR},
         #{icon,jdbcType=VARCHAR}, #{sortNumber,jdbcType=INTEGER}, #{creater,jdbcType=VARCHAR},
-        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},has_children=#{hasChildren}
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},0
         )
     </insert>
 
@@ -107,5 +107,16 @@
                 and parent_id = #{parentId,jdbcType=INTEGER}
             </if>
         </where>
+    </select>
+
+    <select id="selectUserMenusByParentId" resultType="cn.zealon.book.system.org.vo.MenuVO">
+        select id,name,resource_url path,icon
+        from org_permission
+        where parent_id = #{parentId}
+        and id in
+        <foreach collection="list" item="pid" separator="," open="(" close=")">
+            #{pid}
+        </foreach>
+        order by sort_number
     </select>
 </mapper>

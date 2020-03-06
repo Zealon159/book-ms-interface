@@ -2,6 +2,7 @@ package cn.zealon.book.system.org.dao;
 
 import cn.zealon.book.common.base.BaseMapper;
 import cn.zealon.book.system.org.entity.OrgPermission;
+import cn.zealon.book.system.org.vo.MenuVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import java.util.List;
@@ -15,6 +16,13 @@ public interface OrgPermissionMapper extends BaseMapper<OrgPermission> {
      */
     @Select("select count(1) num from org_permission where parent_id=#{id}")
     Integer selectChildrenCount(@Param("id") Integer id);
+
+    /** 获取用户全部权限ID */
+    @Select("select distinct(rp.permission_id) from org_role_permission rp " +
+            "INNER JOIN org_role r on (rp.role_id = r.id) " +
+            "INNER JOIN org_user_role ur on (ur.role_id = r.id) " +
+            "where ur.user_id = #{userId} ")
+    List<Integer> selectPermissionIdsByUserId(@Param("userId") String userId);
 
     /**
      * 根据用户ID查询权限 同时返回权限范围
@@ -39,4 +47,13 @@ public interface OrgPermissionMapper extends BaseMapper<OrgPermission> {
     List<OrgPermission> selectByRoleid(String roleid);
 
     List<OrgPermission> selectAll(@Param("parentId") Integer parentId,@Param("type") String type);
+
+    /**
+     * 查询菜单
+     * @param parentId
+     * @param list
+     * @return
+     */
+    List<MenuVO> selectUserMenusByParentId(@Param("parentId") Integer parentId,
+                                           @Param("list") List<Integer> list);
 }

@@ -1,6 +1,6 @@
 package cn.zealon.book.common.result.util;
 
-import cn.zealon.book.common.enums.HttpCodeEnum;
+import cn.zealon.book.common.result.enums.HttpCodeEnum;
 import cn.zealon.book.common.result.Result;
 
 /**

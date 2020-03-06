@@ -1,6 +1,7 @@
 package cn.zealon.book.system.org.dao;
 
 import cn.zealon.book.system.org.entity.OrgRolePermission;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface OrgRolePermissionMapper {
 
     int batchInsert(List<OrgRolePermission> list);
 
-    int deleteByRoleId(String userId);
+    int deleteByRoleId(@Param("roleId") Integer roleId);
 
-    List<OrgRolePermission> selectByRoleId(String userId);
+    List<OrgRolePermission> selectByRoleId(@Param("roleId") Integer roleId);
 }

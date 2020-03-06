@@ -3,11 +3,14 @@ package cn.zealon.book.system.org.service;
 import cn.zealon.book.common.base.AbstractBaseService;
 import cn.zealon.book.common.result.CascaderVO;
 import cn.zealon.book.common.result.Result;
+import cn.zealon.book.common.result.TreeDataVO;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.bo.OrgPermissionBO;
 import cn.zealon.book.system.org.dao.OrgPermissionMapper;
 import cn.zealon.book.system.org.entity.OrgPermission;
+import cn.zealon.book.system.org.vo.MenuVO;
 import cn.zealon.book.system.org.vo.OrgPermissionEditVO;
+import cn.zealon.book.system.security.shiro.util.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,8 +36,12 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
     @Transactional
     public Result create(OrgPermission model) {
         try {
-            model.setHasChildren(false);
-            super.create(model);
+            Date now = new Date();
+            model.setCreater(UserUtil.getCurrentUserId());
+            model.setUpdater(UserUtil.getCurrentUserId());
+            model.setCreateTime(now);
+            model.setUpdateTime(now);
+            this.orgPermissionMapper.insert(model);
 
             // 更新父级菜单状态
             OrgPermission parent = new OrgPermission();
@@ -135,6 +142,37 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
     }
 
     /**
+     * 获取权限树
+     * @return
+     */
+    public Result getPermissionTree(){
+        List<TreeDataVO> tree = this.getTreeByParentId(0);
+        return ResultUtil.successAndNoMsg(tree);
+    }
+
+    /**
+     * 获取用户菜单JSON
+     * @param userId
+     * @return
+     */
+    public Result getUserMenus(String userId){
+        List<Integer> permissionIds = this.orgPermissionMapper.selectPermissionIdsByUserId(userId);
+        if (permissionIds.size() == 0) {
+            return ResultUtil.successAndNoMsg(new ArrayList<>());
+        }
+
+        // 查询用户菜单
+        List<MenuVO> menus = this.orgPermissionMapper.selectUserMenusByParentId(0, permissionIds);
+        for (int i = 0; i < menus.size(); i++) {
+            MenuVO menu = menus.get(i);
+            List<MenuVO> subMenus = this.orgPermissionMapper.selectUserMenusByParentId(menu.getId(), permissionIds);
+            menu.setChildren(subMenus);
+            menus.set(i,menu);
+        }
+        return ResultUtil.successAndNoMsg(menus);
+    }
+
+    /**
      * 获取 Cascader 组件选项数据源
      * @return
      */
@@ -187,5 +225,27 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
             parentIds.add(ids.get(i));
         }
         return parentIds;
+    }
+
+    /**
+     * 递归获取菜单树
+     * @param parentId
+     * @return
+     */
+    private List<TreeDataVO> getTreeByParentId(Integer parentId){
+        List<TreeDataVO> trees;
+        List<OrgPermission> permissions = this.orgPermissionMapper.selectAll(parentId, null);
+        trees = new ArrayList<>(permissions.size());
+        for (int i = 0; i < permissions.size(); i++) {
+            TreeDataVO vo = new TreeDataVO();
+            OrgPermission permission = permissions.get(i);
+            vo.setId(permission.getId());
+            vo.setLabel(permission.getName());
+            if (permission.getHasChildren()) {
+                vo.setChildren(this.getTreeByParentId(permission.getId()));
+            }
+            trees.add(vo);
+        }
+        return trees;
     }
 }
