@@ -7,6 +7,7 @@
         <result column="parent_id" jdbcType="INTEGER" property="parentId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="page_path" jdbcType="VARCHAR" property="pagePath" />
         <result column="resource_url" jdbcType="VARCHAR" property="resourceUrl" />
         <result column="permission" jdbcType="VARCHAR" property="permission" />
         <result column="icon" jdbcType="VARCHAR" property="icon" />
@@ -20,7 +21,7 @@
 
     <sql id="Base_Column_List">
       id, parent_id, name, type, resource_url, permission, icon, sort_number, creater,
-      create_time, update_time, updater ,has_children
+      create_time, update_time, updater ,has_children ,page_path
     </sql>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -32,12 +33,12 @@
       insert into org_permission (id, parent_id, name,
         type, resource_url, permission,
         icon, sort_number, creater,
-        create_time, update_time, updater ,has_children
+        create_time, update_time, updater ,has_children ,page_path
         )
       values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
         #{type,jdbcType=VARCHAR}, #{resourceUrl,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR},
         #{icon,jdbcType=VARCHAR}, #{sortNumber,jdbcType=INTEGER}, #{creater,jdbcType=VARCHAR},
-        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},0
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},0,#{pagePath}
         )
     </insert>
 
@@ -72,7 +73,10 @@
                 updater = #{updater,jdbcType=VARCHAR},
             </if>
             <if test="hasChildren != null ">
-                has_children = #{hasChildren}
+                has_children = #{hasChildren},
+            </if>
+            <if test="pagePath != null">
+                page_path = #{pagePath,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -118,5 +122,15 @@
             #{pid}
         </foreach>
         order by sort_number
+    </select>
+
+    <select id="selectUserPermissions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from org_permission
+        where id in
+        <foreach collection="list" item="pid" separator="," open="(" close=")">
+            #{pid}
+        </foreach>
     </select>
 </mapper>

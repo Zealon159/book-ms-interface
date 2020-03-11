@@ -30,6 +30,8 @@ public class OrgPermissionBO {
      */
     private String resourceUrl;
 
+    private String pagePath;
+
     /**
      * 权限名称
      */
@@ -107,5 +109,13 @@ public class OrgPermissionBO {
 
     public void setSortNumber(Integer sortNumber) {
         this.sortNumber = sortNumber;
+    }
+
+    public String getPagePath() {
+        return pagePath;
+    }
+
+    public void setPagePath(String pagePath) {
+        this.pagePath = pagePath;
     }
 }

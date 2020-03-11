@@ -1,9 +1,7 @@
 package cn.zealon.book.system.org.service;
 
 import cn.zealon.book.common.base.AbstractBaseService;
-import cn.zealon.book.common.result.CascaderVO;
-import cn.zealon.book.common.result.Result;
-import cn.zealon.book.common.result.TreeDataVO;
+import cn.zealon.book.common.result.*;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.bo.OrgPermissionBO;
 import cn.zealon.book.system.org.dao.OrgPermissionMapper;
@@ -11,15 +9,17 @@ import cn.zealon.book.system.org.entity.OrgPermission;
 import cn.zealon.book.system.org.vo.MenuVO;
 import cn.zealon.book.system.org.vo.OrgPermissionEditVO;
 import cn.zealon.book.system.security.shiro.util.UserUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 权限管理
@@ -205,6 +205,58 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
         }
         data.add(root);
         return ResultUtil.successAndNoMsg(data);
+    }
+
+    /**
+     * 获取用户路由
+     * @return
+     */
+    public Result getUserRouters(String userId){
+        List<RouterVO> routers = new ArrayList<>();
+        List<Integer> permissionIds = this.orgPermissionMapper.selectPermissionIdsByUserId(userId);
+        if (permissionIds.size() == 0) {
+            return ResultUtil.successAndNoMsg(new ArrayList<>());
+        }
+
+        // 获取用户全部菜单
+        List<OrgPermission> permissions = this.orgPermissionMapper.selectUserPermissions(permissionIds);
+        Map<Integer,OrgPermission> permissionMap = permissions.stream().collect(Collectors.toMap(OrgPermission::getId, Function.identity(), (k1, k2) -> k2));
+
+        // 计算路由
+        for (int i = 0; i < permissions.size(); i++) {
+            OrgPermission permission = permissions.get(i);
+            if (permission.getParentId() != 0 && StringUtils.isNotBlank(permission.getPagePath())) {
+                // 计算元数据
+                List<RouterMeta> meta = this.getRouterMeta(permission,permissionMap);
+                RouterVO router = new RouterVO(permission.getResourceUrl(),permission.getName(),permission.getPagePath(),false,meta);
+                routers.add(router);
+            }
+        }
+        return ResultUtil.successAndNoMsg(routers);
+    }
+
+    /**
+     * 获取路由元数据
+     * @param permission
+     * @param permissionMap
+     * @return
+     */
+    private List<RouterMeta> getRouterMeta(OrgPermission permission,Map<Integer,OrgPermission> permissionMap){
+        List<RouterMeta> metas = new ArrayList<>();
+        int i = 0;
+        while (permission.getParentId() != 0){
+            String path = "";
+            if (i > 0) {
+                path = permission.getResourceUrl();
+            }
+            RouterMeta meta = new RouterMeta(permission.getName(), path);
+            metas.add(meta);
+            permission = permissionMap.get(permission.getParentId());
+            i++;
+        }
+        // 处理显示顺序
+        Collections.reverse(metas);
+        return metas;
     }
 
     /**

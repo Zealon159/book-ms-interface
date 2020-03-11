@@ -28,6 +28,8 @@ public class OrgPermissionEditVO extends BaseEntity {
      */
     private String resourceUrl;
 
+    private String pagePath;
+
     /**
      * 权限名称
      */
@@ -107,5 +109,13 @@ public class OrgPermissionEditVO extends BaseEntity {
 
     public void setHasChildren(Boolean hasChildren) {
         this.hasChildren = hasChildren;
+    }
+
+    public String getPagePath() {
+        return pagePath;
+    }
+
+    public void setPagePath(String pagePath) {
+        this.pagePath = pagePath;
     }
 }

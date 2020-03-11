@@ -56,4 +56,11 @@ public interface OrgPermissionMapper extends BaseMapper<OrgPermission> {
      */
     List<MenuVO> selectUserMenusByParentId(@Param("parentId") Integer parentId,
                                            @Param("list") List<Integer> list);
+
+    /**
+     * 查询用户所有菜单权限
+     * @param list
+     * @return
+     */
+    List<OrgPermission> selectUserPermissions(@Param("list") List<Integer> list);
 }

@@ -37,6 +37,8 @@ public class OrgPermission extends BaseEntity {
      */
     private String icon;
 
+    private String pagePath;
+
     /**
      * 排序
      */
@@ -106,5 +108,13 @@ public class OrgPermission extends BaseEntity {
 
     public void setHasChildren(Boolean hasChildren) {
         this.hasChildren = hasChildren;
+    }
+
+    public String getPagePath() {
+        return pagePath;
+    }
+
+    public void setPagePath(String pagePath) {
+        this.pagePath = pagePath;
     }
 }
