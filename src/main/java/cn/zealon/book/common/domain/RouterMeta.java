@@ -1,4 +1,4 @@
-package cn.zealon.book.common.result;
+package cn.zealon.book.common.domain;
 
 /**
  * VUE路由元数据

@@ -1,6 +1,9 @@
 package cn.zealon.book.system.org.service;
 
 import cn.zealon.book.common.base.AbstractBaseService;
+import cn.zealon.book.common.domain.Cascader;
+import cn.zealon.book.common.domain.RouterMeta;
+import cn.zealon.book.common.domain.Router;
 import cn.zealon.book.common.result.*;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.bo.OrgPermissionBO;
@@ -177,21 +180,21 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
      * @return
      */
     public Result getParentCascaderOptions(){
-        List<CascaderVO> data = new ArrayList<>();
-        CascaderVO root = new CascaderVO("0","根目录");
+        List<Cascader> data = new ArrayList<>();
+        Cascader root = new Cascader("0","根目录");
         // 一级目录
         List<OrgPermission> orgPermissions = this.orgPermissionMapper.selectAll(0 ,null);
-        List<CascaderVO> cascaders = new ArrayList<>(orgPermissions.size());
+        List<Cascader> cascaders = new ArrayList<>(orgPermissions.size());
         for (int i = 0; i < orgPermissions.size(); i++) {
             OrgPermission permission = orgPermissions.get(i);
-            CascaderVO cascader = new CascaderVO(permission.getId().toString(),permission.getName());
+            Cascader cascader = new Cascader(permission.getId().toString(),permission.getName());
             if (permission.getHasChildren()) {
                 // 二级菜单
                 List<OrgPermission> subPermissions = this.orgPermissionMapper.selectAll(permission.getId() ,"menu");
-                List<CascaderVO> subCascaders = new ArrayList<>(subPermissions.size());
+                List<Cascader> subCascaders = new ArrayList<>(subPermissions.size());
                 for (int j = 0; j < subPermissions.size(); j++) {
                     OrgPermission subPermission = subPermissions.get(j);
-                    CascaderVO subCascader = new CascaderVO(subPermission.getId().toString(),subPermission.getName());
+                    Cascader subCascader = new Cascader(subPermission.getId().toString(),subPermission.getName());
                     subCascaders.add(subCascader);
                 }
                 if (subCascaders.size() > 0) {
@@ -212,7 +215,7 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
      * @return
      */
     public Result getUserRouters(String userId){
-        List<RouterVO> routers = new ArrayList<>();
+        List<Router> routers = new ArrayList<>();
         List<Integer> permissionIds = this.orgPermissionMapper.selectPermissionIdsByUserId(userId);
         if (permissionIds.size() == 0) {
             return ResultUtil.successAndNoMsg(new ArrayList<>());
@@ -228,7 +231,7 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
             if (permission.getParentId() != 0 && StringUtils.isNotBlank(permission.getPagePath())) {
                 // 计算元数据
                 List<RouterMeta> meta = this.getRouterMeta(permission,permissionMap);
-                RouterVO router = new RouterVO(permission.getResourceUrl(),permission.getName(),permission.getPagePath(),false,meta);
+                Router router = new Router(permission.getResourceUrl(),permission.getName(),permission.getPagePath(),false,meta);
                 routers.add(router);
             }
         }

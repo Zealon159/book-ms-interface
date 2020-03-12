@@ -1,4 +1,4 @@
-package cn.zealon.book.common.result;
+package cn.zealon.book.common.domain;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import java.util.List;
  * @author: tangyl
  * @since: 2020/3/10
  */
-public class RouterVO {
+public class Router {
 
     private String path;
     private String name;
@@ -55,9 +55,9 @@ public class RouterVO {
         this.meta = meta;
     }
 
-    public RouterVO(){}
+    public Router(){}
 
-    public RouterVO(String pathUrl, String name, String componentPath, Boolean hidden, List<RouterMeta> meta) {
+    public Router(String pathUrl, String name, String componentPath, Boolean hidden, List<RouterMeta> meta) {
         this.path = pathUrl;
         this.name = name;
         this.component = componentPath;

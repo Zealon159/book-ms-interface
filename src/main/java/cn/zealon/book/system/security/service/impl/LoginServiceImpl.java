@@ -1,13 +1,13 @@
 package cn.zealon.book.system.security.service.impl;
 
-import cn.zealon.book.system.org.entity.OrgUser;
+import cn.zealon.book.system.org.service.OrgUserService;
 import cn.zealon.book.system.org.vo.OrgUserVO;
 import cn.zealon.book.system.security.service.LoginService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,9 @@ import java.util.Map;
  */
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {
+
+	@Autowired
+	private OrgUserService orgUserService;
 
 	/**
 	 * 登录程序
@@ -65,9 +68,8 @@ public class LoginServiceImpl implements LoginService {
 
 			if (success) {
 				msg = "登录成功！";
-				OrgUser user = (OrgUser) subject.getPrincipal();
-				userVO = new OrgUserVO();
-				BeanUtils.copyProperties(user,userVO);
+				// 获取用户展示信息
+				userVO = (OrgUserVO) this.orgUserService.getUserInfo().getData();
 			}
 		}
 
@@ -83,9 +85,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	public void doLogout() {
 		Subject subject = SecurityUtils.getSubject();
-//		String sessionId = subject.getSession().getId().toString();
-//		String sessionCacheKey = ShiroCache.REDIS_SHIRO_CACHE + sessionId;
-//		redisService.delete(sessionCacheKey);
 		subject.logout();
 	}
 }

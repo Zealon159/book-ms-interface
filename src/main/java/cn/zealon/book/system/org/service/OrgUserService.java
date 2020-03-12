@@ -221,14 +221,15 @@ public class OrgUserService {
         return ResultUtil.successAndNoMsg(user);
     }
 
-	private List<OrgUserVO> getUserListVo(Page<OrgUser> pageList){
-		List<OrgUserVO> voList = new ArrayList<>(pageList.size());
-		for (int i = 0; i < pageList.size(); i++) {
-			OrgUser orgUser = pageList.get(i);
-			OrgUserVO vo = new OrgUserVO();
-			BeanUtils.copyProperties(orgUser,vo);
-			voList.add(vo);
+	/**
+	 * 获取用户个人信息
+	 * @return
+	 */
+	public Result getUserInfo(){
+		OrgUserVO userVO = UserUtil.getCurrentOrgUser();
+		if (userVO == null){
+			return ResultUtil.forbidden();
 		}
-		return voList;
+		return ResultUtil.successAndNoMsg().buildData(userVO);
 	}
 }

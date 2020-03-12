@@ -1,6 +1,6 @@
 package cn.zealon.book.system.security.shiro.util;
 
-import cn.zealon.book.system.org.entity.OrgUser;
+import cn.zealon.book.system.org.vo.OrgUserVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 public class UserUtil {
@@ -8,12 +8,12 @@ public class UserUtil {
 	 * 获取当前登录用户对象
 	 * @return
 	 */
-	public static OrgUser getCurrentOrgUser(){
-		OrgUser user = null;
+	public static OrgUserVO getCurrentOrgUser(){
+		OrgUserVO user = null;
 		try {
 			Subject subject = SecurityUtils.getSubject();
 			if (subject != null) {
-				user = (OrgUser) subject.getPrincipal();
+				user = (OrgUserVO) subject.getPrincipal();
 			}
 		} catch (Exception ex){
 			ex.printStackTrace();
@@ -29,7 +29,7 @@ public class UserUtil {
 		String userId = "";
 		Subject subject = SecurityUtils.getSubject();
 		if(subject!=null && subject.getPrincipal() != null){
-			userId = ((OrgUser)subject.getPrincipal()).getUserId();
+			userId = ((OrgUserVO)subject.getPrincipal()).getUserId();
 		}
 		return userId;
 	}
@@ -42,9 +42,17 @@ public class UserUtil {
 		String userName = "";
 		Subject subject = SecurityUtils.getSubject();
 		if(subject!=null){
-			userName = ((OrgUser)subject.getPrincipal()).getUserName();
+			userName = ((OrgUserVO)subject.getPrincipal()).getUserName();
 		}
 		return userName;
+	}
+
+	/**
+	 * 获取当前session
+	 * @return
+	 */
+	public static String getCurrentSessionId(){
+		return SecurityUtils.getSubject().getSession().getId().toString();
 	}
 
 }

@@ -49,25 +49,14 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 
         // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/js/**", "anon");
-        filterChainDefinitionMap.put("/images/**", "anon");
-        filterChainDefinitionMap.put("/image/**", "anon");
-        filterChainDefinitionMap.put("/css/**", "anon");
-        filterChainDefinitionMap.put("/font/**", "anon");
         filterChainDefinitionMap.put("/doLogin", "anon");
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/403", "anon");
         filterChainDefinitionMap.put("/401", "anon");
         filterChainDefinitionMap.put("/user-info", "anon");
         filterChainDefinitionMap.put("/404", "authc");
-        filterChainDefinitionMap.put("/project/file/get-template-list", "authc");
-        filterChainDefinitionMap.put("/templates/**", "anon");
-        filterChainDefinitionMap.put("/head/**", "authc");
-        filterChainDefinitionMap.put("/message/**", "authc");
-        filterChainDefinitionMap.put("/upload", "authc");
         filterChainDefinitionMap.put("/attachment/**", "authc");
         filterChainDefinitionMap.put("/logout", "authc");
-        filterChainDefinitionMap.put("/system/data-dic/**", "authc");
 
         // 登录页面
         shiroFilterFactoryBean.setLoginUrl("/401");
@@ -76,11 +65,7 @@ public class ShiroConfig {
         //未授权界面
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-        
-        //退出过滤器
-//        Map<String,Filter> filters = new LinkedHashMap<String,Filter>();
-//        filters.put("logout", new SystemLogoutFilter());
-//        shiroFilterFactoryBean.setFilters(filters);
+
         return shiroFilterFactoryBean;
     }
 
@@ -95,7 +80,7 @@ public class ShiroConfig {
      */
 	@Bean
     public ShiroRealm shiroRealm(){
-        ShiroRealm shiroRealm = new ShiroRealm();
+        ShiroRealm shiroRealm = new ShiroRealm(redisCacheManager());
         shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         shiroRealm.setAuthorizationCachingEnabled(true);
         shiroRealm.setAuthorizationCacheName(GlobalConstant.AUTHORIZATION_CACHE_NAME);

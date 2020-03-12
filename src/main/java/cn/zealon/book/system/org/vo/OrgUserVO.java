@@ -1,12 +1,15 @@
 package cn.zealon.book.system.org.vo;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: zealon
  * @since: 2019/10/30
  */
-public class OrgUserVO {
+public class OrgUserVO  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户id
@@ -39,6 +42,10 @@ public class OrgUserVO {
      * 联系电话
      */
     private String phoneNumber;
+
+    private List<String> roles;
+
+    private String sysAttachmentPortrait;
 
     public String getUserId() {
         return userId;
@@ -94,5 +101,21 @@ public class OrgUserVO {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public String getSysAttachmentPortrait() {
+        return sysAttachmentPortrait;
+    }
+
+    public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
+        this.sysAttachmentPortrait = sysAttachmentPortrait;
     }
 }

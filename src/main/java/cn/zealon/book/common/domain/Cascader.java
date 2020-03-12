@@ -1,4 +1,4 @@
-package cn.zealon.book.common.result;
+package cn.zealon.book.common.domain;
 
 import java.util.List;
 
@@ -7,15 +7,15 @@ import java.util.List;
  * @author: tangyl
  * @since: 2020/2/9
  */
-public class CascaderVO {
+public class Cascader {
 
     private String value;
     private String label;
-    private List<CascaderVO> children;
+    private List<Cascader> children;
 
-    public CascaderVO(){}
+    public Cascader(){}
 
-    public CascaderVO(String value, String label) {
+    public Cascader(String value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -36,11 +36,11 @@ public class CascaderVO {
         this.label = label;
     }
 
-    public List<CascaderVO> getChildren() {
+    public List<Cascader> getChildren() {
         return children;
     }
 
-    public void setChildren(List<CascaderVO> children) {
+    public void setChildren(List<Cascader> children) {
         this.children = children;
     }
 }
