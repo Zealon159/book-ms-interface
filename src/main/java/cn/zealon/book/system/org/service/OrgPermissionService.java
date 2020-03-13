@@ -8,6 +8,7 @@ import cn.zealon.book.common.result.*;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.bo.OrgPermissionBO;
 import cn.zealon.book.system.org.dao.OrgPermissionMapper;
+import cn.zealon.book.system.org.dao.OrgRolePermissionMapper;
 import cn.zealon.book.system.org.entity.OrgPermission;
 import cn.zealon.book.system.org.vo.MenuVO;
 import cn.zealon.book.system.org.vo.OrgPermissionEditVO;
@@ -19,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,6 +34,9 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
 
     @Autowired
     private OrgPermissionMapper orgPermissionMapper;
+
+    @Autowired
+    private OrgRolePermissionMapper orgRolePermissionMapper;
 
     @Override
     @Transactional
@@ -97,6 +100,13 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
 
     @Transactional
     public Result deleteById(Integer parentId,Integer id) {
+        // 验证是否有角色在使用
+        List<String> roleNames = this.orgRolePermissionMapper.selectRoleNamesByPermission(id);
+        if (roleNames.size() > 0) {
+            String roles = StringUtils.join(roleNames.toArray(), ",");
+            return ResultUtil.verificationFailed().buildMessage("删除失败！当前角色["+roles+"]正在使用该权限！");
+        }
+
         // 验证是否有子菜单
         Integer childrenCount = this.orgPermissionMapper.selectChildrenCount(id);
         if (childrenCount > 0) {

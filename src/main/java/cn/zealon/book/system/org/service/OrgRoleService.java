@@ -7,8 +7,10 @@ import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.system.org.bo.OrgRoleBO;
 import cn.zealon.book.system.org.dao.OrgRoleMapper;
 import cn.zealon.book.system.org.dao.OrgRolePermissionMapper;
+import cn.zealon.book.system.org.dao.OrgUserRoleMapper;
 import cn.zealon.book.system.org.entity.OrgRole;
 import cn.zealon.book.system.org.entity.OrgRolePermission;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +34,9 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
     private OrgRoleMapper orgRoleMapper;
 
     @Autowired
+    private OrgUserRoleMapper orgUserRoleMapper;
+
+    @Autowired
     private OrgRolePermissionMapper orgRolePermissionMapper;
 
     @Transactional
@@ -41,7 +46,6 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
             OrgRole role = new OrgRole();
             BeanUtils.copyProperties(record, role);
             super.create(role);
-
             // 处理角色权限
             this.saveRolePermissions(record.getPermissions(),role.getId());
         } catch (Exception ex){
@@ -57,11 +61,10 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
             OrgRole role = new OrgRole();
             BeanUtils.copyProperties(record, role);
             super.update(role);
-
             // 删除角色权限
             this.orgRolePermissionMapper.deleteByRoleId(record.getId());
             // 处理角色权限
-            this.saveRolePermissions(record.getPermissions(),record.getId());
+            this.saveRolePermissions(record.getPermissions(), record.getId());
         } catch (Exception ex){
             LOGGER.error("更新角色失败：{}",ex.getMessage());
             return ResultUtil.fail().buildMessage("角色更新失败了！");
@@ -72,6 +75,14 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
     @Override
     @Transactional
     public Result deleteById(Integer id) {
+        if (id == 1) {
+            return ResultUtil.verificationFailed().buildMessage("不好意思，不能删除管理员角色哦。 ε=(´ο｀*)))");
+        }
+        List<String> uids = this.orgUserRoleMapper.selectUserIdsByRoleId(id);
+        if (uids.size() > 0) {
+            String uid = StringUtils.join(uids.toArray(), ",");
+            return ResultUtil.verificationFailed().buildMessage("当前用户[" + uid + "]正在使用该角色，不能乱删哦~");
+        }
         try {
             // 删除角色
             this.orgRoleMapper.deleteByPrimaryKey(id);
@@ -113,7 +124,7 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
      * @param roleId
      */
     private void saveRolePermissions(Integer[] permissionIds,Integer roleId){
-        if (permissionIds != null) {
+        if (permissionIds != null && permissionIds.length > 0) {
             List<OrgRolePermission> permissions = new ArrayList<>();
             for (int i = 0; i < permissionIds.length; i++) {
                 OrgRolePermission rolePermission = new OrgRolePermission(permissionIds[i],roleId);

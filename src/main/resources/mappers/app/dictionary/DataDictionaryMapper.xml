@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.book.app.dictionary.dao.DataDictionaryMapper">
+
+    <resultMap id="BaseResultMap" type="cn.zealon.book.app.dictionary.entity.DataDictionary">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="dic_type" jdbcType="VARCHAR" property="dicType" />
+        <result column="dic_type_name" jdbcType="VARCHAR" property="dicTypeName" />
+        <result column="code" jdbcType="INTEGER" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sort_number" jdbcType="INTEGER" property="sortNumber" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+       id, dic_type, dic_type_name, code, name, sort_number
+    </sql>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+      delete from data_dictionary
+      where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="cn.zealon.book.app.dictionary.entity.DataDictionary">
+      insert into data_dictionary (dic_type, dic_type_name, code, name, sort_number)
+      values (#{dicType,jdbcType=VARCHAR},#{dicTypeName,jdbcType=VARCHAR}, #{code,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sortNumber,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="cn.zealon.book.app.dictionary.entity.DataDictionary">
+        update data_dictionary
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNumber != null">
+                sort_number = #{sortNumber,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  data_dictionary
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByDicTypeAndCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  data_dictionary
+        where dic_type = #{dicType,jdbcType=VARCHAR}
+        and code = #{code}
+    </select>
+
+
+    <sql id="findPageWithWhere">
+        <where> 1=1
+            <if test="dicType != null and dicType != ''" >
+                and dic_type = #{dicType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findPageWithResult" parameterType="String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  data_dictionary
+        <include refid="findPageWithWhere" />
+    </select>
+
+    <select id="findPageWithCount" parameterType="String" resultType="Integer">
+        select count(1)
+        from data_dictionary
+        <include refid="findPageWithWhere" />
+    </select>
+</mapper>

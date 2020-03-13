@@ -50,13 +50,12 @@ public class ShiroConfig {
 
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/doLogin", "anon");
-        filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/403", "anon");
         filterChainDefinitionMap.put("/401", "anon");
-        filterChainDefinitionMap.put("/user-info", "anon");
         filterChainDefinitionMap.put("/404", "authc");
         filterChainDefinitionMap.put("/attachment/**", "authc");
         filterChainDefinitionMap.put("/logout", "authc");
+        filterChainDefinitionMap.put("/**", "authc");
 
         // 登录页面
         shiroFilterFactoryBean.setLoginUrl("/401");

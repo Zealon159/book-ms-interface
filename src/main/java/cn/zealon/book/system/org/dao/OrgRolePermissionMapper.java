@@ -2,6 +2,7 @@ package cn.zealon.book.system.org.dao;
 
 import cn.zealon.book.system.org.entity.OrgRolePermission;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -17,4 +18,12 @@ public interface OrgRolePermissionMapper {
     int deleteByRoleId(@Param("roleId") Integer roleId);
 
     List<OrgRolePermission> selectByRoleId(@Param("roleId") Integer roleId);
+
+    /**
+     * 查询所有使用权限的角色名称
+     * @param permissionId
+     * @return
+     */
+    @Select(" select name from org_role where id in (select role_id from org_role_permission where permission_id = #{permissionId}) ")
+    List<String> selectRoleNamesByPermission(@Param("permissionId") Integer permissionId);
 }
