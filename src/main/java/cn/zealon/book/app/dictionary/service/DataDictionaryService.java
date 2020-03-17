@@ -6,6 +6,7 @@ import cn.zealon.book.common.DataDictionaryEnum;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
 import cn.zealon.book.common.result.Result;
+import cn.zealon.book.common.result.SelectVO;
 import cn.zealon.book.common.result.util.ResultUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -77,6 +78,22 @@ public class DataDictionaryService {
             list.add(map);
         }
         return ResultUtil.successAndNoMsg(list);
+    }
+
+    /**
+     * 获取字典数据源
+     * @param type
+     * @return
+     */
+    public Result getDictionaryOptions(String type){
+        List<DataDictionary> list = this.dictionaryMapper.findPageWithResult(type);
+        List<SelectVO> vos = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            DataDictionary dic = list.get(i);
+            SelectVO vo = new SelectVO(dic.getCode(),dic.getName());
+            vos.add(vo);
+        }
+        return ResultUtil.successAndNoMsg().buildData(vos);
     }
 
     private String getTypeName(String type){

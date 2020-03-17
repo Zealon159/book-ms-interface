@@ -36,11 +36,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     /** 注册web文件资源访问地址 */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String mapPath = "file:" + systemPropertiesConfig.getUploadPath();
-        registry.addResourceHandler(systemPropertiesConfig.getHeadAccess()).addResourceLocations(mapPath);
-        // 模板
-        String templatesPath = "file:" + systemPropertiesConfig.getUploadPath() + "templates/";
-        registry.addResourceHandler(systemPropertiesConfig.getTemplatesAccess()).addResourceLocations(templatesPath);
+        // 附件路径
+        String mapPath = "file:" + systemPropertiesConfig.getUploadPath() + systemPropertiesConfig.getAttachmentDir();
+        // 映射访问地址
+        registry.addResourceHandler(systemPropertiesConfig.getAttachmentAccess()).addResourceLocations(mapPath);
     }
 
     /**

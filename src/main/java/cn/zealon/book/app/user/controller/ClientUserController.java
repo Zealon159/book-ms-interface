@@ -3,7 +3,7 @@ package cn.zealon.book.app.user.controller;
 import cn.zealon.book.common.base.BaseController;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.Result;
-import cn.zealon.book.system.org.entity.OrgUser;
+import cn.zealon.book.system.org.bo.OrgUserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import cn.zealon.book.app.user.service.*;
@@ -23,7 +23,7 @@ public class ClientUserController extends BaseController {
     private ClientUserService clientUserService;
 
     @PutMapping("/update")
-    public Result updateUserInfo(@RequestBody OrgUser record){
+    public Result updateUserInfo(@RequestBody OrgUserBO record){
         return this.clientUserService.updateUserInfo(record);
     }
 

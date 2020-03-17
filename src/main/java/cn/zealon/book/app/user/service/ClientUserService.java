@@ -3,6 +3,8 @@ package cn.zealon.book.app.user.service;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.core.cache.RedisService;
+import cn.zealon.book.system.attachment.service.SysAttachmentService;
+import cn.zealon.book.system.org.bo.OrgUserBO;
 import cn.zealon.book.system.org.dao.OrgUserMapper;
 import cn.zealon.book.system.org.entity.OrgUser;
 import cn.zealon.book.system.org.vo.OrgUserVO;
@@ -23,16 +25,22 @@ public class ClientUserService {
     private OrgUserMapper orgUserMapper;
 
     @Autowired
+    private SysAttachmentService attachmentService;
+
+    @Autowired
     RedisService redisService;
 
-    public Result updateUserInfo(OrgUser record){
+    public Result updateUserInfo(OrgUserBO bo){
         OrgUserVO vo = UserUtil.getCurrentOrgUser();
         OrgUser user = new OrgUser();
         user.setUserId(vo.getUserId());
-        user.setUserName( record.getUserName());
-        user.setPhoneNumber(record.getPhoneNumber());
+        user.setUserName( bo.getUserName());
+        user.setPhoneNumber(bo.getPhoneNumber());
+        user.setHeadImgUrl(bo.getHeadImgUrl());
         try {
             this.orgUserMapper.updateByPrimaryKey(user);
+            // 处理附件关联
+            attachmentService.relevanceAttachments(vo.getUserId().hashCode(), bo.getAttachmentIds());
             return ResultUtil.success().buildMessage("保存成功啦 O(∩_∩)O");
         } catch (Exception ex){
             ex.printStackTrace();

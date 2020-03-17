@@ -44,7 +44,11 @@ public class OrgUserBO {
 
     private Boolean freezeStatus;
 
-    private String sysAttachmentPortrait;
+    /** 头像地址 */
+    private String headImgUrl;
+
+    /** 附件ID */
+    private String[] attachmentIds;
 
     public Integer[] getRoles() {
         return roles;
@@ -110,11 +114,19 @@ public class OrgUserBO {
         this.freezeStatus = freezeStatus;
     }
 
-    public String getSysAttachmentPortrait() {
-        return sysAttachmentPortrait;
+    public String getHeadImgUrl() {
+        return headImgUrl;
     }
 
-    public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
-        this.sysAttachmentPortrait = sysAttachmentPortrait;
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
+    }
+
+    public String[] getAttachmentIds() {
+        return attachmentIds;
+    }
+
+    public void setAttachmentIds(String[] attachmentIds) {
+        this.attachmentIds = attachmentIds;
     }
 }

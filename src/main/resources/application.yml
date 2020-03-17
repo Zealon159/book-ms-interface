@@ -24,7 +24,5 @@ spring:
 system:
   properties:
     upload-path: /Users/admin/local/
-    attachment-dir: attachment/ #附件目录
-    project-attachment-dir: project-attachment/ #项目文件附件目录
-    head-access: /head/** #头像访问地址
-    templates-access: /templates/** #模板访问地址
+    attachment-dir: attachment/ # 附件目录
+    attachment-access: /attachment/** # 访问URL映射

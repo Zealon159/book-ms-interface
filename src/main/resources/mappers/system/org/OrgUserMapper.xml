@@ -10,7 +10,7 @@
         <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
         <result column="sort_number" jdbcType="INTEGER" property="sortNumber" />
         <result column="freeze_status" jdbcType="INTEGER" property="freezeStatus" />
-        <result column="sys_attachment_portrait" jdbcType="CHAR" property="sysAttachmentPortrait" />
+        <result column="head_img_url" jdbcType="CHAR" property="headImgUrl" />
         <result column="creater" jdbcType="VARCHAR" property="creater" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-      user_id, dept_id, user_pwd, user_name, phone_number, sort_number, sys_attachment_portrait,
+      user_id, dept_id, user_pwd, user_name, phone_number, sort_number, head_img_url,
       creater, create_time, update_time, updater ,freeze_status
     </sql>
 
@@ -30,12 +30,12 @@
     <insert id="insert" parameterType="cn.zealon.book.system.org.entity.OrgUser">
       insert into org_user (user_id, dept_id, user_pwd,
         user_name, phone_number, sort_number, freeze_status,
-        sys_attachment_portrait, creater, create_time,
+        head_img_url, creater, create_time,
         update_time, updater)
       values (#{userId,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, #{userPwd,jdbcType=VARCHAR},
         #{userName,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{sortNumber,jdbcType=INTEGER},
         #{freezeStatus},
-        #{sysAttachmentPortrait,jdbcType=CHAR}, #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{headImgUrl,jdbcType=CHAR}, #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR})
     </insert>
 
@@ -60,8 +60,8 @@
             <if test="freezeStatus != null">
                 freeze_status = #{freezeStatus},
             </if>
-            <if test="sysAttachmentPortrait != null">
-                sys_attachment_portrait = #{sysAttachmentPortrait,jdbcType=CHAR},
+            <if test="headImgUrl != null">
+                head_img_url = #{headImgUrl,jdbcType=CHAR},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -96,7 +96,7 @@
 
     <select id="findPageWithResult" resultType="cn.zealon.book.system.org.vo.OrgUserVO">
         select u.user_id userId, u.dept_id deptId, u.user_name userName, u.phone_number phoneNumber,
-        u.sort_number sortNumber, u.freeze_status freezeStatus,d.name deptName
+        u.sort_number sortNumber, u.freeze_status freezeStatus, u.head_img_url headImgUrl,d.name deptName
         from  org_user u
         inner join org_dept d
         on (u.dept_id = d.id)

@@ -8,7 +8,6 @@ package cn.zealon.book.common;
 public enum DataDictionaryEnum {
     CATEGORY("category","书籍分类"),
     CHANNEL("channel","所属频道"),
-    ONLINE_STATUS("online_status","上线状态"),
     SERIAL_STATUS("serial_status","连载状态")
     ;
 

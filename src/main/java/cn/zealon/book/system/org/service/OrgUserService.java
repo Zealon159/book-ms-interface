@@ -185,7 +185,6 @@ public class OrgUserService {
             // 存储用户角色
             this.orgUserRoleService.deleteByUserId(bo.getUserId());
             this.orgUserRoleService.create(bo.getUserId(),bo.getRoles());
-
 			return ResultUtil.success();
 		} catch (Exception ex){
 			logger.error("修改用户密码异常:{}",ex.getMessage());

@@ -45,7 +45,7 @@ public class OrgUserVO  implements Serializable {
 
     private List<String> roles;
 
-    private String sysAttachmentPortrait;
+    private String headImgUrl;
 
     public String getUserId() {
         return userId;
@@ -111,11 +111,11 @@ public class OrgUserVO  implements Serializable {
         this.roles = roles;
     }
 
-    public String getSysAttachmentPortrait() {
-        return sysAttachmentPortrait;
+    public String getHeadImgUrl() {
+        return headImgUrl;
     }
 
-    public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
-        this.sysAttachmentPortrait = sysAttachmentPortrait;
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
     }
 }

@@ -39,7 +39,7 @@ public class OrgUser extends BaseEntity implements Serializable {
 
 	private Boolean freezeStatus;
 
-	private String sysAttachmentPortrait;
+	private String headImgUrl;
 
 	public String getUserId() {
 		return userId;
@@ -97,11 +97,11 @@ public class OrgUser extends BaseEntity implements Serializable {
 		this.freezeStatus = freezeStatus;
 	}
 
-	public String getSysAttachmentPortrait() {
-		return sysAttachmentPortrait;
+	public String getHeadImgUrl() {
+		return headImgUrl;
 	}
 
-	public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
-		this.sysAttachmentPortrait = sysAttachmentPortrait;
+	public void setHeadImgUrl(String headImgUrl) {
+		this.headImgUrl = headImgUrl;
 	}
 }

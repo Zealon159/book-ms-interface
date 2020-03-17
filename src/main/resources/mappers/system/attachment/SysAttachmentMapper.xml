@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.book.system.attachment.dao.SysAttachmentMapper">
+
+    <resultMap id="BaseResultMap" type="cn.zealon.book.system.attachment.entity.SysAttachment">
+        <id column="id" jdbcType="CHAR" property="id" />
+        <result column="document_id" jdbcType="INTEGER" property="documentId" />
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+        <result column="table_field" jdbcType="VARCHAR" property="tableField" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+        <result column="ext_name" jdbcType="VARCHAR" property="extName" />
+        <result column="file_size" jdbcType="VARCHAR" property="fileSize" />
+        <result column="creater" jdbcType="VARCHAR" property="creater" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, document_id ,table_code, table_field, name, file_path, ext_name, file_size, creater, create_time
+    </sql>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+      delete from sys_attachment
+      where id = #{id,jdbcType=CHAR}
+    </delete>
+
+    <insert id="insert" parameterType="cn.zealon.book.system.attachment.entity.SysAttachment">
+      insert into sys_attachment (id,document_id, table_code, table_field,
+        name, file_path, ext_name,
+        file_size, creater, create_time
+        )
+      values (#{id,jdbcType=CHAR}, #{documentId},#{tableCode,jdbcType=VARCHAR}, #{tableField,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{extName,jdbcType=VARCHAR},
+        #{fileSize,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.zealon.book.system.attachment.entity.SysAttachment">
+        update sys_attachment
+        <set>
+            <if test="documentId != null">
+                document_id = #{documentId,jdbcType=INTEGER},
+            </if>
+            <if test="tableCode != null">
+                table_code = #{tableCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tableField != null">
+                table_field = #{tableField,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath != null">
+                file_path = #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="extName != null">
+                ext_name = #{extName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                file_size = #{fileSize,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  sys_attachment
+        where id = #{id,jdbcType=CHAR}
+    </select>
+
+    <select id="findUserHead" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  sys_attachment
+        where document_id=#{documentId} and table_code='user' and table_field='userHead'
+        order by create_time desc
+        limit 1
+    </select>
+
+    <select id="findPageWithResult" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  sys_attachment
+        where document_id=#{documentId} and table_code=#{tableCode}
+        <if test="tableField!=null">
+            and table_field=#{tableField}
+        </if>
+
+    </select>
+
+    <select id="findPageWithCount" resultType="Integer">
+        select count(1)
+        from sys_attachment
+        where document_id=#{documentId} and table_code=#{tableCode}
+        <if test="tableField!=null">
+            and table_field=#{tableField}
+        </if>
+    </select>
+</mapper>

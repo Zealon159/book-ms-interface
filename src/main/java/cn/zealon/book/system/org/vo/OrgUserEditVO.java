@@ -37,7 +37,7 @@ public class OrgUserEditVO {
 
     private Boolean freezeStatus;
 
-    private String sysAttachmentPortrait;
+    private String headImgUrl;
 
     /**
      * 用户角色
@@ -100,12 +100,12 @@ public class OrgUserEditVO {
         this.freezeStatus = freezeStatus;
     }
 
-    public String getSysAttachmentPortrait() {
-        return sysAttachmentPortrait;
+    public String getHeadImgUrl() {
+        return headImgUrl;
     }
 
-    public void setSysAttachmentPortrait(String sysAttachmentPortrait) {
-        this.sysAttachmentPortrait = sysAttachmentPortrait;
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
     }
 
     public Integer[] getRoles() {

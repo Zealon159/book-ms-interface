@@ -54,4 +54,14 @@ public class DataDictionaryController extends BaseController {
     public Result getTypeOptions(){
         return dataDictionaryService.getTypeOptions();
     }
+
+    /**
+     * 获取字典数据源
+     * @param type
+     * @return
+     */
+    @GetMapping("/get-select-options")
+    public Result getDictionaryOptions(String type){
+        return this.dataDictionaryService.getDictionaryOptions(type);
+    }
 }

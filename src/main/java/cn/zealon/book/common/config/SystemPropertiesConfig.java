@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 系统属性文件配置
- * @author: tangyl
+ * @author: zealon
  * @since: 2019/10/25
  */
 @Component
@@ -16,12 +16,8 @@ public class SystemPropertiesConfig {
     private String uploadPath;
     /** 附件根目录 */
     private String attachmentDir;
-    /** 项目文件附件根目录 */
-    private String projectAttachmentDir;
-    /** 头像访问地址 */
-    private String headAccess;
-    /** 模板访问地址 */
-    private String templatesAccess;
+    /** 访问地址 */
+    private String attachmentAccess;
 
     public String getAttachmentDir() {
         return attachmentDir;
@@ -39,27 +35,11 @@ public class SystemPropertiesConfig {
         this.uploadPath = uploadPath;
     }
 
-    public String getProjectAttachmentDir() {
-        return projectAttachmentDir;
+    public String getAttachmentAccess() {
+        return attachmentAccess;
     }
 
-    public void setProjectAttachmentDir(String projectAttachmentDir) {
-        this.projectAttachmentDir = projectAttachmentDir;
-    }
-
-    public String getHeadAccess() {
-        return headAccess;
-    }
-
-    public void setHeadAccess(String headAccess) {
-        this.headAccess = headAccess;
-    }
-
-    public String getTemplatesAccess() {
-        return templatesAccess;
-    }
-
-    public void setTemplatesAccess(String templatesAccess) {
-        this.templatesAccess = templatesAccess;
+    public void setAttachmentAccess(String attachmentAccess) {
+        this.attachmentAccess = attachmentAccess;
     }
 }

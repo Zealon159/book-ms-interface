@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.book.app.book.dao.BookMapper">
+
+    <resultMap id="BaseResultMap" type="cn.zealon.book.app.book.entity.Book">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="author_id" jdbcType="INTEGER" property="authorId" />
+        <result column="dic_category" jdbcType="INTEGER" property="dicCategory" />
+        <result column="dic_channel" jdbcType="INTEGER" property="dicChannel" />
+        <result column="dic_serial_status" jdbcType="INTEGER" property="dicSerialStatus" />
+        <result column="online_status" jdbcType="BIT" property="onlineStatus" />
+        <result column="book_id" jdbcType="VARCHAR" property="bookId" />
+        <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+        <result column="book_score" jdbcType="INTEGER" property="bookScore" />
+        <result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+        <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+        <result column="isbn" jdbcType="VARCHAR" property="isbn" />
+        <result column="word_count" jdbcType="INTEGER" property="wordCount" />
+        <result column="creater" jdbcType="VARCHAR" property="creater" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, author_id, dic_category, dic_channel, dic_serial_status, online_status, book_id,
+      book_name, book_score, key_word, img_url, author_name, introduction, isbn, word_count,
+      creater, create_time, update_time, updater
+    </sql>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+      delete from book
+      where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="cn.zealon.book.app.book.entity.Book" useGeneratedKeys="true" keyProperty="id">
+      insert into book ( author_id, dic_category,
+        dic_channel, dic_serial_status, online_status,
+        book_id, book_name, book_score,
+        key_word, img_url, author_name,
+        introduction, isbn, word_count,
+        creater, create_time, update_time,
+        updater)
+      values (#{authorId,jdbcType=INTEGER}, #{dicCategory,jdbcType=INTEGER},
+        #{dicChannel,jdbcType=INTEGER}, #{dicSerialStatus,jdbcType=INTEGER}, #{onlineStatus,jdbcType=BIT},
+        #{bookId,jdbcType=VARCHAR}, #{bookName,jdbcType=VARCHAR}, #{bookScore,jdbcType=INTEGER},
+        #{keyWord,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR},
+        #{introduction,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, #{wordCount,jdbcType=INTEGER},
+        #{creater,jdbcType=VARCHAR},  now(), now(), #{updater,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="cn.zealon.book.app.book.entity.Book">
+        update book
+        <set>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="dicCategory != null">
+                dic_category = #{dicCategory,jdbcType=INTEGER},
+            </if>
+            <if test="dicChannel != null">
+                dic_channel = #{dicChannel,jdbcType=INTEGER},
+            </if>
+            <if test="dicSerialStatus != null">
+                dic_serial_status = #{dicSerialStatus,jdbcType=INTEGER},
+            </if>
+            <if test="onlineStatus != null">
+                online_status = #{onlineStatus,jdbcType=BIT},
+            </if>
+            <if test="bookId != null">
+                book_id = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookName != null">
+                book_name = #{bookName,jdbcType=VARCHAR},
+            </if>
+            <if test="bookScore != null">
+                book_score = #{bookScore,jdbcType=INTEGER},
+            </if>
+            <if test="keyWord != null">
+                key_word = #{keyWord,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="authorName != null">
+                author_name = #{authorName,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="isbn != null">
+                isbn = #{isbn,jdbcType=VARCHAR},
+            </if>
+            <if test="wordCount != null">
+                word_count = #{wordCount,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectByBookId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  book
+        where book_id = #{bookId}
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  book
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <sql id="findPageWithWhere">
+        <where> 1=1
+            <if test="authorId != null" >
+                and author_id = #{authorId,jdbcType=INTEGER}
+            </if>
+            <if test="dicCategory != null" >
+                and dic_category = #{dicCategory,jdbcType=INTEGER}
+            </if>
+            <if test="dicChannel != null" >
+                and dic_channel = #{dicChannel,jdbcType=INTEGER}
+            </if>
+            <if test="dicSerialStatus != null" >
+                and dic_serial_status = #{dicSerialStatus,jdbcType=INTEGER}
+            </if>
+            <if test="onlineStatus != null" >
+                and online_status = #{onlineStatus,jdbcType=BIT}
+            </if>
+            <if test="bookId != null and bookId != ''" >
+                and book_id = #{bookId,jdbcType=VARCHAR}
+            </if>
+            <if test="bookName != null and bookName != ''" >
+                and book_name like  concat('%',#{bookName,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="findPageWithResult" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  book
+        <include refid="findPageWithWhere" />
+    </select>
+
+    <select id="findPageWithCount" resultType="Integer">
+        select count(1)
+        from book
+        <include refid="findPageWithWhere" />
+    </select>
+
+</mapper>
