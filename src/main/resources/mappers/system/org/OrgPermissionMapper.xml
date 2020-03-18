@@ -101,6 +101,7 @@
                 and type = #{type}
             </if>
         </where>
+        order by sort_number
     </select>
 
     <select id="selectAllCount" resultType="Integer">

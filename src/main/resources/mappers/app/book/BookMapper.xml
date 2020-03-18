@@ -141,7 +141,9 @@
                 and book_id = #{bookId,jdbcType=VARCHAR}
             </if>
             <if test="bookName != null and bookName != ''" >
-                and book_name like  concat('%',#{bookName,jdbcType=VARCHAR},'%')
+                and (book_name like concat('%',#{bookName,jdbcType=VARCHAR},'%')
+                 or book_id like concat('%',#{bookName,jdbcType=VARCHAR},'%')
+                )
             </if>
         </where>
     </sql>
@@ -151,6 +153,7 @@
         <include refid="Base_Column_List" />
         from  book
         <include refid="findPageWithWhere" />
+        order by create_time desc
     </select>
 
     <select id="findPageWithCount" resultType="Integer">

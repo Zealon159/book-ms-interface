@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zealon.book.app.book.dao.BookChapterMapper">
+
+    <resultMap id="BaseResultMap" type="cn.zealon.book.app.book.entity.BookChapter">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="book_id" jdbcType="INTEGER" property="bookId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="lock_status" jdbcType="BIT" property="lockStatus" />
+        <result column="sort_number" jdbcType="INTEGER" property="sortNumber" />
+        <result column="creater" jdbcType="VARCHAR" property="creater" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, book_id, name, content, lock_status, sort_number, creater, create_time, update_time,
+      updater
+    </sql>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+      delete from book_chapter
+      where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="cn.zealon.book.app.book.entity.BookChapter">
+      insert into book_chapter (id, book_id, name,
+        content, lock_status, sort_number,
+        creater, create_time, update_time,
+        updater)
+      values (#{id,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR}, #{lockStatus,jdbcType=BIT}, #{sortNumber,jdbcType=INTEGER},
+        #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{updater,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="cn.zealon.book.app.book.entity.BookChapter">
+        update book_chapter
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="lockStatus != null">
+                lock_status = #{lockStatus,jdbcType=BIT},
+            </if>
+            <if test="sortNumber != null">
+                sort_number = #{sortNumber,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  book_chapter
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <sql id="findPageWithWhere">
+        <where>
+            book_id = #{bookId,jdbcType=INTEGER}
+        </where>
+    </sql>
+
+    <select id="findPageWithResult" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  book_chapter
+        <include refid="findPageWithWhere" />
+    </select>
+
+    <select id="findPageWithCount" parameterType="java.lang.Integer" resultType="Integer">
+        select count(1)
+        from book_chapter
+        <include refid="findPageWithWhere" />
+    </select>
+
+</mapper>

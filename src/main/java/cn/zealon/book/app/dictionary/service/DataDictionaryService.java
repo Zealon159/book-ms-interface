@@ -1,5 +1,6 @@
 package cn.zealon.book.app.dictionary.service;
 
+import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.dictionary.dao.DataDictionaryMapper;
 import cn.zealon.book.app.dictionary.entity.DataDictionary;
 import cn.zealon.book.common.DataDictionaryEnum;
@@ -28,6 +29,9 @@ public class DataDictionaryService {
     @Autowired
     private DataDictionaryMapper dictionaryMapper;
 
+    @Autowired
+    private BookMapper bookMapper;
+
     public Result create(DataDictionary record){
         if (this.dictionaryMapper.selectByDicTypeAndCode(record.getDicType(), record.getCode()) != null) {
             return ResultUtil.verificationFailed().buildMessage(record.getDicType()+"已经存在此code，请更换！");
@@ -45,7 +49,19 @@ public class DataDictionaryService {
     }
 
     public Result delete(Integer id){
-        // todo 存在判断
+        // 字典使用校验
+        DataDictionary dataDictionary = this.dictionaryMapper.selectById(id);
+        int count = 0;
+        if (dataDictionary.getDicType().equals(DataDictionaryEnum.CATEGORY.getValue())) {
+            count = this.bookMapper.findPageWithCount(dataDictionary.getCode(),null,null,null,null,null,null);
+        } else if (dataDictionary.getDicType().equals(DataDictionaryEnum.CHANNEL.getValue())) {
+            count = this.bookMapper.findPageWithCount(null,dataDictionary.getCode(),null,null,null,null,null);
+        } else if (dataDictionary.getDicType().equals(DataDictionaryEnum.SERIAL_STATUS.getValue())) {
+            count = this.bookMapper.findPageWithCount(null,null,dataDictionary.getCode(),null,null,null,null);
+        }
+        if (count > 0) {
+            return ResultUtil.verificationFailed().buildMessage(dataDictionary.getDicTypeName() + "："+dataDictionary.getName() + "，已被图书使用，不能删哦！");
+        }
 
         this.dictionaryMapper.deleteByPrimaryKey(id);
         return ResultUtil.success();
