@@ -4,6 +4,7 @@ import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.dictionary.dao.DataDictionaryMapper;
 import cn.zealon.book.app.dictionary.entity.DataDictionary;
 import cn.zealon.book.common.DataDictionaryEnum;
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
 import cn.zealon.book.common.result.Result;
@@ -27,6 +28,9 @@ import java.util.Map;
 public class DataDictionaryService {
 
     @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
+    @Autowired
     private DataDictionaryMapper dictionaryMapper;
 
     @Autowired
@@ -43,12 +47,19 @@ public class DataDictionaryService {
     }
 
     public Result update(DataDictionary record){
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            return ResultUtil.verificationFailed().buildMessage("系统做了演示数据保留处理，演示数据拒绝更新哦");
+        }
         record.setCode(null);
         this.dictionaryMapper.updateByPrimaryKey(record);
         return ResultUtil.success();
     }
 
     public Result delete(Integer id){
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，演示数据拒绝删除哦");
+        }
+
         // 字典使用校验
         DataDictionary dataDictionary = this.dictionaryMapper.selectById(id);
         int count = 0;

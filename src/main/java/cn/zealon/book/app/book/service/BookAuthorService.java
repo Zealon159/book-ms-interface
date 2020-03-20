@@ -5,6 +5,7 @@ import cn.zealon.book.app.book.dao.BookAuthorMapper;
 import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.book.entity.BookAuthor;
 import cn.zealon.book.common.base.AbstractBaseService;
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.SelectVO;
 import cn.zealon.book.common.result.util.ResultUtil;
@@ -41,6 +42,9 @@ public class BookAuthorService extends AbstractBaseService<BookAuthor> {
     @Autowired
     private SysAttachmentService attachmentService;
 
+    @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
     public Result create(BookAuthorBO bo) {
         BookAuthor record = new BookAuthor();
         Date now = new Date();
@@ -62,6 +66,11 @@ public class BookAuthorService extends AbstractBaseService<BookAuthor> {
     }
 
     public Result update(BookAuthorBO bo) {
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (bo.getId() <= 40) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了开关，40个作者演示数据拒绝更新哦");
+            }
+        }
         BookAuthor record = new BookAuthor();
         Date now = new Date();
         BeanUtils.copyProperties(bo,record);
@@ -81,6 +90,12 @@ public class BookAuthorService extends AbstractBaseService<BookAuthor> {
 
     @Override
     public Result deleteById(Integer id) {
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (id <= 40) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，40个作者演示数据拒绝删除哦");
+            }
+        }
+
         Integer count = this.bookMapper.findPageWithCount(null,null,null,null,id,null,null);
         if (count > 0) {
             return ResultUtil.verificationFailed().buildMessage("作者笔下有"+count+"本图书，还不能删除哦！");

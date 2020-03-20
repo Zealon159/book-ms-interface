@@ -51,4 +51,14 @@ public class BookChapterController extends BaseController {
     public Result details(Integer id){
         return bookChapterService.findById(id);
     }
+
+    /**
+     * 获取阅读章节信息（当前章节内容、上一章ID、下一章ID）
+     * @param id
+     * @return
+     */
+    @GetMapping("/read")
+    public Result getReadChapterInfo(Integer id){
+        return this.bookChapterService.getReadChapterInfo(id);
+    }
 }

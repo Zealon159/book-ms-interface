@@ -11,13 +11,32 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("system.properties")
 public class SystemPropertiesConfig {
-
+    /** 删除开关 */
+    private Boolean deleteSwitch;
+    /** 上传白名单 */
+    private String uploadWhite;
     /** 上传路径 */
     private String uploadPath;
     /** 附件根目录 */
     private String attachmentDir;
     /** 访问地址 */
     private String attachmentAccess;
+
+    public Boolean getDeleteSwitch() {
+        return deleteSwitch;
+    }
+
+    public void setDeleteSwitch(Boolean deleteSwitch) {
+        this.deleteSwitch = deleteSwitch;
+    }
+
+    public String getUploadWhite() {
+        return uploadWhite;
+    }
+
+    public void setUploadWhite(String uploadWhite) {
+        this.uploadWhite = uploadWhite;
+    }
 
     public String getAttachmentDir() {
         return attachmentDir;

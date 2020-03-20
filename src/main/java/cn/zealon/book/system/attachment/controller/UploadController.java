@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 普通附件上传接口
  * @author: zealon
@@ -21,10 +23,11 @@ public class UploadController extends BaseController {
     private UploadService uploadService;
 
     @PostMapping("upload")
-    public Result upload(@RequestParam("file") MultipartFile[] files,
+    public Result upload(HttpServletRequest request,
+                         @RequestParam("file") MultipartFile[] files,
                          @RequestParam(value = "documentId",required = false) Integer documentId,
                          @RequestParam(value = "tableCode") String tableCode,
                          @RequestParam(value = "tableField") String tableField){
-        return uploadService.uploadFiles(files,documentId, tableCode, tableField);
+        return uploadService.uploadFiles(request,files,documentId, tableCode, tableField);
     }
 }

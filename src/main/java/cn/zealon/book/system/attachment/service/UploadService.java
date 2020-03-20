@@ -4,6 +4,7 @@ import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.common.utils.CommonUtil;
+import cn.zealon.book.common.utils.IPUtil;
 import cn.zealon.book.common.utils.Utils;
 import cn.zealon.book.system.attachment.dao.SysAttachmentMapper;
 import cn.zealon.book.system.attachment.entity.SysAttachment;
@@ -11,6 +12,8 @@ import cn.zealon.book.system.security.shiro.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,7 +41,7 @@ public class UploadService {
      * @param tableField    关联表字段
      * @return
      */
-    public Result uploadFiles(MultipartFile[] files, Integer documentId, String tableCode, String tableField) {
+    public Result uploadFiles(HttpServletRequest request, MultipartFile[] files, Integer documentId, String tableCode, String tableField) {
         // 获取保存文件的根目录
         String rootPath = systemPropertiesConfig.getUploadPath();
 
@@ -89,10 +92,36 @@ public class UploadService {
             }
         }
 
-        // 返回结果
+        // 白名单正常返回，否则返回指定图片(防止网友上传禁图显示出来)
         Map<String,Object> data = new HashMap<>();
+        String ip = IPUtil.getIpAddr(request);
+        if (!white(ip)) {
+            attachments.remove(0);
+            Map<String,Object> attachment = new HashMap<>();
+            attachment.put("id","220c9298f6474db088f54356bf9a21fc");
+            attachment.put("path","attachment/2020-03-18/220c9298f6474db088f54356bf9a21fc.jpg");
+            attachments.add(attachment);
+            data.put("attachments",attachments);
+            return ResultUtil.success(data).buildMessage("图片已上传，但是处理为显示了系统指定了图片哦，请谅解~");
+        }
+        // 返回结果
         data.put("attachments",attachments);
-        Result result = ResultUtil.successAndNoMsg(data);
-        return result;
+        return ResultUtil.successAndNoMsg(data);
+    }
+
+    private boolean white(String ip){
+        boolean ok = true;
+        String whites = this.systemPropertiesConfig.getUploadWhite();
+        if (whites != null) {
+            ok = false;
+            String[] whitesArr = whites.split(",");
+            for (int i = 0; i < whitesArr.length; i++) {
+                if (whitesArr[i].equals(ip)) {
+                    ok = true;
+                    break;
+                }
+            }
+        }
+        return ok;
     }
 }

@@ -2,9 +2,11 @@ package cn.zealon.book.app.book.service;
 
 import cn.zealon.book.app.book.bo.BookBO;
 import cn.zealon.book.app.book.dao.BookAuthorMapper;
+import cn.zealon.book.app.book.dao.BookChapterMapper;
 import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.book.entity.Book;
 import cn.zealon.book.app.book.entity.BookAuthor;
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
 import cn.zealon.book.common.result.Result;
@@ -36,7 +38,16 @@ public class BookService {
     private BookAuthorMapper bookAuthorMapper;
 
     @Autowired
+    private BookChapterMapper bookChapterMapper;
+
+    @Autowired
     private SysAttachmentService attachmentService;
+
+    @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
+    public BookService() {
+    }
 
     /**
      * 创建图书
@@ -79,6 +90,11 @@ public class BookService {
      * @return
      */
     public Result update(BookBO bo){
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (bo.getId() <= 20) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，20本演示数据拒绝更新哦");
+            }
+        }
         Book book = new Book();
         BeanUtils.copyProperties(bo, book);
         book.setUpdater(UserUtil.getCurrentUserId());
@@ -123,9 +139,16 @@ public class BookService {
      * @return
      */
     public Result delete(Integer id){
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (id <= 20) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，20本演示数据拒绝删除哦");
+            }
+        }
         try{
+            // 删除图书
             this.bookMapper.deleteByPrimaryKey(id);
-            // 删除章节 todo
+            // 删除章节
+            this.bookChapterMapper.deleteByBookId(id);
         } catch (Exception ex){
             LOGGER.error("删除图书异常:{}",ex.getMessage());
             return ResultUtil.fail();

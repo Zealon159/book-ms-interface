@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
  * IP工具类
  */
 public class IPUtil {
-	
-	private static Logger logger = LoggerFactory.getLogger(IPUtil.class);
+
 
 	/**
 	 * 获取IP地址

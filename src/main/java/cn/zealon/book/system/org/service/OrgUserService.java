@@ -1,5 +1,6 @@
 package cn.zealon.book.system.org.service;
 
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
 import cn.zealon.book.common.result.Result;
@@ -38,6 +39,9 @@ public class OrgUserService {
 
 	@Autowired
 	private OrgUserRoleService orgUserRoleService;
+
+	@Autowired
+	private SystemPropertiesConfig systemPropertiesConfig;
 	
 	/**
 	 * 获取当前用户所有角色
@@ -146,6 +150,12 @@ public class OrgUserService {
 	 * @return
 	 */
 	public Result updatePassword(OrgUser record) {
+		if (systemPropertiesConfig.getDeleteSwitch()) {
+			if (record.getUserId().equals("admin")) {
+				return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+			}
+		}
+
 		OrgUser user = this.selectByUserId(record.getUserId());
 		if (user == null) {
 			return ResultUtil.notFound().buildMessage("操作失败！找不到该用户（"+record.getUserId()+"）！");
@@ -174,6 +184,12 @@ public class OrgUserService {
 	 * @return
 	 */
 	public Result update(OrgUserBO bo){
+		if (systemPropertiesConfig.getDeleteSwitch()) {
+			if (bo.getUserId().equals("admin")) {
+				return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+			}
+		}
+
 	    OrgUser record = new OrgUser();
 	    BeanUtils.copyProperties(bo,record);
 		record.setUpdateTime(new Date());

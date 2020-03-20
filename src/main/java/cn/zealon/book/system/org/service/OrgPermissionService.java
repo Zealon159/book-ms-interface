@@ -1,6 +1,7 @@
 package cn.zealon.book.system.org.service;
 
 import cn.zealon.book.common.base.AbstractBaseService;
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Cascader;
 import cn.zealon.book.common.domain.RouterMeta;
 import cn.zealon.book.common.domain.Router;
@@ -38,6 +39,9 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
     @Autowired
     private OrgRolePermissionMapper orgRolePermissionMapper;
 
+    @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
     @Override
     @Transactional
     public Result create(OrgPermission model) {
@@ -63,6 +67,11 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
 
     @Transactional
     public Result update(OrgPermissionBO record) {
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (record.getId() <= 44) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了开关，演示数据拒绝修改哦");
+            }
+        }
         try {
             OrgPermission permission = new OrgPermission();
             // 处理上级ID
@@ -100,6 +109,11 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
 
     @Transactional
     public Result deleteById(Integer parentId,Integer id) {
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (id <= 44) {
+                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，演示数据拒绝删除哦");
+            }
+        }
         // 验证是否有角色在使用
         List<String> roleNames = this.orgRolePermissionMapper.selectRoleNamesByPermission(id);
         if (roleNames.size() > 0) {

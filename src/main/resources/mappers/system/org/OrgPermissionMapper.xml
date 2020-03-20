@@ -117,7 +117,7 @@
     <select id="selectUserMenusByParentId" resultType="cn.zealon.book.system.org.vo.MenuVO">
         select id,name,resource_url path,icon
         from org_permission
-        where parent_id = #{parentId}
+        where parent_id = #{parentId} and sort_number > -1
         and id in
         <foreach collection="list" item="pid" separator="," open="(" close=")">
             #{pid}

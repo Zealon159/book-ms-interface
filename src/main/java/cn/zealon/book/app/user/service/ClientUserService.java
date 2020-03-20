@@ -1,5 +1,6 @@
 package cn.zealon.book.app.user.service;
 
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.core.cache.RedisService;
@@ -30,7 +31,15 @@ public class ClientUserService {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
     public Result updateUserInfo(OrgUserBO bo){
+        if (systemPropertiesConfig.getDeleteSwitch()) {
+            if (bo.getUserId().equals("admin")) {
+                return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+            }
+        }
         OrgUserVO vo = UserUtil.getCurrentOrgUser();
         OrgUser user = new OrgUser();
         user.setUserId(vo.getUserId());
@@ -44,7 +53,7 @@ public class ClientUserService {
             return ResultUtil.success().buildMessage("保存成功啦 O(∩_∩)O");
         } catch (Exception ex){
             ex.printStackTrace();
-            return ResultUtil.success().buildMessage("保存失败了~");
+            return ResultUtil.fail().buildMessage("保存失败了~");
         }
     }
 
@@ -55,6 +64,11 @@ public class ClientUserService {
      * @return
      */
     public Result updateUserPwd(String currentPwd,String pass){
+        if (systemPropertiesConfig.getDeleteSwitch()) {
+            if (UserUtil.getCurrentUserId().equals("admin")) {
+                return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+            }
+        }
         OrgUser dbUser = this.orgUserMapper.selectByUserId(UserUtil.getCurrentUserId());
         String checkPwd = ShiroUserPwdUtil.generateEncryptPwd(dbUser.getUserId(), currentPwd);
         if (!checkPwd.equals(dbUser.getUserPwd())) {
