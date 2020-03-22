@@ -102,7 +102,7 @@ public class UploadService {
             attachment.put("path","attachment/2020-03-18/220c9298f6474db088f54356bf9a21fc.jpg");
             attachments.add(attachment);
             data.put("attachments",attachments);
-            return ResultUtil.success(data).buildMessage("图片已上传，但是处理为显示了系统指定了图片哦，请谅解~");
+            return ResultUtil.success(data).buildMessage("图片已上传，由于演示系统是公开的，指定了默认图片哦，请谅解~");
         }
         // 返回结果
         data.put("attachments",attachments);

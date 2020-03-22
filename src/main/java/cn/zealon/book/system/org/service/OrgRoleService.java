@@ -62,6 +62,11 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
 
     @Transactional
     public Result update(OrgRoleBO record) {
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (record.getId() <= 4) {
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
+            }
+        }
         try {
             OrgRole role = new OrgRole();
             BeanUtils.copyProperties(record, role);
