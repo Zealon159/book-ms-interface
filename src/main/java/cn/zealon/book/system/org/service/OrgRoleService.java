@@ -1,6 +1,8 @@
 package cn.zealon.book.system.org.service;
 
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.base.AbstractBaseService;
+import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.SelectVO;
 import cn.zealon.book.common.result.util.ResultUtil;
@@ -39,6 +41,9 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
     @Autowired
     private OrgRolePermissionMapper orgRolePermissionMapper;
 
+    @Autowired
+    private SystemPropertiesConfig systemPropertiesConfig;
+
     @Transactional
     public Result create(OrgRoleBO record) {
         try {
@@ -75,8 +80,10 @@ public class OrgRoleService extends AbstractBaseService<OrgRole> {
     @Override
     @Transactional
     public Result deleteById(Integer id) {
-        if (id == 1) {
-            return ResultUtil.verificationFailed().buildMessage("不好意思，不能删除管理员角色哦。 ε=(´ο｀*)))");
+        if (this.systemPropertiesConfig.getDeleteSwitch()) {
+            if (id <= 4) {
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
+            }
         }
         List<String> uids = this.orgUserRoleMapper.selectUserIdsByRoleId(id);
         if (uids.size() > 0) {

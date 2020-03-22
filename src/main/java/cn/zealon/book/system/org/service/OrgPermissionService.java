@@ -1,5 +1,6 @@
 package cn.zealon.book.system.org.service;
 
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.base.AbstractBaseService;
 import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Cascader;
@@ -69,7 +70,7 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
     public Result update(OrgPermissionBO record) {
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (record.getId() <= 44) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了开关，演示数据拒绝修改哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
         try {
@@ -111,7 +112,7 @@ public class OrgPermissionService extends AbstractBaseService<OrgPermission> {
     public Result deleteById(Integer parentId,Integer id) {
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (id <= 44) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，演示数据拒绝删除哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
         // 验证是否有角色在使用

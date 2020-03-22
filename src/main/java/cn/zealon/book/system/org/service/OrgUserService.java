@@ -1,5 +1,6 @@
 package cn.zealon.book.system.org.service;
 
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
@@ -152,7 +153,7 @@ public class OrgUserService {
 	public Result updatePassword(OrgUser record) {
 		if (systemPropertiesConfig.getDeleteSwitch()) {
 			if (record.getUserId().equals("admin")) {
-				return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+				return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
 			}
 		}
 
@@ -186,7 +187,7 @@ public class OrgUserService {
 	public Result update(OrgUserBO bo){
 		if (systemPropertiesConfig.getDeleteSwitch()) {
 			if (bo.getUserId().equals("admin")) {
-				return ResultUtil.verificationFailed().buildMessage("演示数据admin不能修改哦");
+				return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
 			}
 		}
 

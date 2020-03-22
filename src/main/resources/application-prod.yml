@@ -1,0 +1,69 @@
+server:
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    cn.zealon.book.** : INFO
+
+spring:
+  #---- MySQL配置  ----#
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/book-ms?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 'abcdefg'
+    initial-size: 5
+    min-idle: 5
+    max-active: 30
+    max-wait: 60000
+
+  #---- redis配置  ----#
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #最大连接数据库连接数,设 0 为没有限制
+        max-active: 30
+        #最大等待连接中的数量,设 0 为没有限制
+        max-idle: 10
+        #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        max-wait: -1ms
+        #最小等待连接中的数量,设 0 为没有限制
+        min-idle: 0
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          max-wait: -1ms
+          min-idle: 0
+        shutdown-timeout: 100ms
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+#  jackson:
+#    default-property-inclusion: non_null
+
+  main:
+    allow-bean-definition-overriding: true
+
+# 系统属性文件配置
+system:
+  properties:
+    # 删除开关（上线演示，避免删除全部数据）
+    delete-switch: true
+    # 上传白名单
+    upload-white: 127.0.0.1,localhost,122.115.233.123
+    # 操作系统物理路径
+    upload-path: /usr/local/server/book-ms-api/
+    # 附件相对目录
+    attachment-dir: attachment/
+    # 访问URL映射
+    attachment-access: /attachment/**
+

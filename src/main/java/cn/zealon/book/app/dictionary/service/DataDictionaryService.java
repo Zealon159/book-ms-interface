@@ -3,6 +3,7 @@ package cn.zealon.book.app.dictionary.service;
 import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.dictionary.dao.DataDictionaryMapper;
 import cn.zealon.book.app.dictionary.entity.DataDictionary;
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.DataDictionaryEnum;
 import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
@@ -48,7 +49,7 @@ public class DataDictionaryService {
 
     public Result update(DataDictionary record){
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
-            return ResultUtil.verificationFailed().buildMessage("系统做了演示数据保留处理，演示数据拒绝更新哦");
+            return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
         }
         record.setCode(null);
         this.dictionaryMapper.updateByPrimaryKey(record);
@@ -57,7 +58,7 @@ public class DataDictionaryService {
 
     public Result delete(Integer id){
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
-            return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，演示数据拒绝删除哦");
+            return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
         }
 
         // 字典使用校验

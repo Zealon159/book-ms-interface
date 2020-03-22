@@ -1,36 +1,6 @@
 server:
   port: 8002
 
-logging:
-  level:
-    cn.zealon.book.** : debug
-
 spring:
   profiles:
-    include: data
-
-  servlet:
-    multipart:
-      max-file-size: 2500MB
-      max-request-size: 2500MB
-
-#  jackson:
-#    default-property-inclusion: non_null
-
-  main:
-    allow-bean-definition-overriding: true
-
-# 系统属性文件配置
-system:
-  properties:
-    # 删除开关（上线演示，避免删除全部数据）
-    delete-switch: true
-    # 上传白名单
-    upload-white: 127.0.0.1,localhost,122.115.233.123
-    # 操作系统物理路径
-    upload-path: /Users/admin/local/
-    # 附件相对目录
-    attachment-dir: attachment/
-    # 访问URL映射
-    attachment-access: /attachment/**
-
+    active: dev

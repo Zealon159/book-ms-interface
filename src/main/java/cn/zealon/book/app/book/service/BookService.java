@@ -6,6 +6,7 @@ import cn.zealon.book.app.book.dao.BookChapterMapper;
 import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.book.entity.Book;
 import cn.zealon.book.app.book.entity.BookAuthor;
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.domain.Params;
 import cn.zealon.book.common.result.PageVO;
@@ -92,7 +93,7 @@ public class BookService {
     public Result update(BookBO bo){
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (bo.getId() <= 20) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，20本演示数据拒绝更新哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
         Book book = new Book();
@@ -141,7 +142,7 @@ public class BookService {
     public Result delete(Integer id){
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (id <= 20) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，20本演示数据拒绝删除哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
         try{

@@ -4,6 +4,7 @@ import cn.zealon.book.app.book.bo.BookAuthorBO;
 import cn.zealon.book.app.book.dao.BookAuthorMapper;
 import cn.zealon.book.app.book.dao.BookMapper;
 import cn.zealon.book.app.book.entity.BookAuthor;
+import cn.zealon.book.common.Const;
 import cn.zealon.book.common.base.AbstractBaseService;
 import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
@@ -68,7 +69,7 @@ public class BookAuthorService extends AbstractBaseService<BookAuthor> {
     public Result update(BookAuthorBO bo) {
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (bo.getId() <= 40) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了开关，40个作者演示数据拒绝更新哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
         BookAuthor record = new BookAuthor();
@@ -92,7 +93,7 @@ public class BookAuthorService extends AbstractBaseService<BookAuthor> {
     public Result deleteById(Integer id) {
         if (this.systemPropertiesConfig.getDeleteSwitch()) {
             if (id <= 40) {
-                return ResultUtil.verificationFailed().buildMessage("系统做了删除开关，40个作者演示数据拒绝删除哦");
+                return ResultUtil.verificationFailed().buildMessage(Const.TIP_CONTENT);
             }
         }
 
