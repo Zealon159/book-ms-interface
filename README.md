@@ -31,34 +31,34 @@
 
 ```
 - src/main/java
-	- cn.zealon.book
-  	- app / 业务应用包
-  		- book / 图书
-  		- dictionary / 数据字典
-  		- index / 系统主页
-  		- user / 用户信息
-  	- common / 公共包
-  		- base / 抽象基类
-  		- config / 工程配置
-  		- domain / 公共域对象
-  		- result / 响应结果封装
-  		- utils / 工具类
-  	- core / 核心包 
-    	- cache / 缓存
-    	- datasource / 数据源
-    	- exception / 异常处理
-    	- log / 操作日志
-    	- schedule / 调度任务
-  	- system / 系统功能包
-    	- attachment / 附件
-    	- org / 组织、用户、角色、权限
-    	- security / 安全处理(shiro)
+  - cn.zealon.book
+    - app / 业务应用包
+  	  - book / 图书
+  	  - dictionary / 数据字典
+  	  - index / 系统主页
+  	  - user / 用户信息
+    - common / 公共包
+  	  - base / 抽象基类
+  	  - config / 工程配置
+  	  - domain / 公共域对象
+  	  - result / 响应结果封装
+  	  - utils / 工具类
+    - core / 核心包 
+      - cache / 缓存
+      - datasource / 数据源
+      - exception / 异常处理
+      - log / 操作日志
+      - schedule / 调度任务
+    - system / 系统功能包
+      - attachment / 附件
+      - org / 组织、用户、角色、权限
+      - security / 安全处理(shiro)
     - Application.java / 项目启动类
 - src/main/resources
-	- mappers / MyBatis映射文件
-	- application.yml / 应用配置文件
-	- application-dev.yml / 开发环境配置
-	- application-prod.yml / 生产环境配置
+  - mappers / MyBatis映射文件
+  - application.yml / 应用配置文件
+  - application-dev.yml / 开发环境配置
+  - application-prod.yml / 生产环境配置
 ```
 
 ## 快速开始
@@ -100,7 +100,120 @@
 
 ## 指南
 
-### 登录
+### 身份认证
 
-登录授权使用了 shiro 安全框架实现，如果修改用户登录验证部分，改写 cn.zealon.book.system.security.shiro.ShiroRealm 的 doGetAuthenticationInfo 函数。
+登录身份授权使用了 Shiro 安全框架实现，Shiro 核心组件说明：
+
+| 组件               | 说明                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| SecurityManager    | 安全管理器，图中没有对此说明，但安全管理器又起到了最重要的作用，它对 所有组件起到统一管理的作用。可以理解为Shiro架构本身。 |
+| Realms             | 域，图中也没有对此说明，Shiro从Realm获取安全数据(如用户、角色、权限)， 就是说SecurityManager要验证用户身份，那么它需要从Realm获取相应的用户 进行比较以确定用户身份是否合法；也需要从Realm得到用户相应的角色/权限 进行验证用户是否能进行操作；可以把Realm看成DataSource，即安全数据源。 |
+| Authentication     | 认证管理器，起到用户登录认证的作用。                         |
+| Authorization      | 授权管理器，访问授权控制，相当于角色权限管理，即确定“谁”可以访问“什么”。 |
+| Session Management | 会话管理。                                                   |
+
+其中我们的安全管理器在 `common.config.ShiroConfig` 类下配置，同时也配置了会话管理、资源拦截配置、Realm、等等。
+
+如果修改用户登录验证部分，那么要改写 `system.security.shiro.ShiroRealm` 类的 `doGetAuthenticationInfo` 函数，登录成功后将用户信息存储至 `principal` 中，这样只要用户登录后持续保持会话，就可以在任何地方获取我们的用户信息啦。
+
+角色权限部分，则在 `doGetAuthorizationInfo` 函数中处理，目前本项目没有实现shiro操作权限。可以通过声明式注解指定的接口，实现权限验证，详细使用请参阅官网。
+
+### 应用开发
+
+系统对实体、持久层、服务层、控制器层，都做了一定的抽象，其父类在 `common.base` 包中。
+
+#### 实体层
+
+实体类继承 BaseEntity 即可，不需要有 id、创建时间等属性，都在父类中实现。
+
+#### 持久层
+
+持久层接口，继承 `BaseMapper`，泛型参数填写实体类，实现方法写在 `mapper.xml` 中即可，如果没有特殊的函数，不需要在 `mapper.java` 中编写方法。如：
+
+```
+public interface OrgDeptMapper extends BaseMapper<OrgDept> {
+		/** 获取部门数据源 */
+    @Select("select id,name text from org_dept order by sort_number")
+    List<SelectVO> getDeptSelect();
+}
+```
+
+其中CRUD方法，不需要编写(父类中已实现)，可直接应用。
+
+#### 服务层
+
+服务层继承 `AbstractBaseService` ，泛型参数填写实体类，如没有特殊函数，同样的不需要写一行代码。如：
+
+```
+@Service
+public class OrgDeptService extends AbstractBaseService<OrgDept> {
+
+}
+```
+
+`AbstractBaseService` 默认实现了基本的 CRUD 函数，子类不用写这些基本的函数，如有业务逻辑，则可以重写这些方法或增加自定义方法即可。
+
+如重写某一个函数，实现一定的业务逻辑：
+
+```
+@Override
+public Result deleteById(Integer id) {
+    Integer userCount = orgUserMapper.findCountByDept(id);
+    if (userCount > 0) {
+        return ResultUtil.verificationFailed().buildMessage("删除失败，该部门下还有" + userCount + "个用户，请先移动用户至其它部门！");
+    }
+    return super.deleteById(id);
+}
+```
+
+#### 控制器层
+
+控制器层继承 `BaseController` ，声明 `@RestController` 标识Rest接口，引入对应的服务类，定义API接口映射即可：
+
+```
+@RestController
+@RequestMapping("system/org/dept")
+public class OrgDeptController extends BaseController {
+	// ...
+}
+```
+
+前后端分离项目涉及跨域问题，其中 `BaseController` 中使用了跨域注解支持，其它 controler 就不用单独声明了。
+
+#### 响应结果
+
+响应结果结构，code 为状态码，msg 为通知消息，data 为响应数据。
+
+如果普通的操作，只返回 msg 即可；如果请求查询，则返回 data 数据。
+
+```
+{
+    "code":200,
+    "msg":"操作成功",
+    "data":null
+}
+```
+
+系统对响应结果做了完善的封装，只需要一行代码即可实现各类操作的响应处理。如：
+
+```
+public Result create(){
+    // 默认成功
+    return ResultUtil.success();
+    
+    // 默认失败
+    return ResultUtil.fail();
+    
+    // 默认成功不返回通知
+    return ResultUtil.successAndNoMsg();
+    
+    // 默认成功自定义通知
+    return ResultUtil.success().buildMessage("你好啊");
+    
+    // 默认成功自定义响应数据
+    return ResultUtil.success("我是数据ヾ(◍°∇°◍)ﾉﾞ");
+    
+    // 等等...
+}
+```
 
