@@ -44,9 +44,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-#  jackson:
-#    default-property-inclusion: non_null
-
   main:
     allow-bean-definition-overriding: true
 
@@ -54,9 +51,9 @@ spring:
 system:
   properties:
     # 删除开关（上线演示，避免删除全部数据）
-    delete-switch: true
+    delete-switch: false
     # 上传白名单
-    upload-white: 127.0.0.1,localhost,122.115.233.123
+    upload-white: 127.0.0.1
     # 操作系统物理路径
     upload-path: /Users/admin/local/
     # 附件相对目录

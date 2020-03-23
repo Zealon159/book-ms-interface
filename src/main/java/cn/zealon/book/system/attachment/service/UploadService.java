@@ -4,11 +4,14 @@ import cn.zealon.book.common.config.SystemPropertiesConfig;
 import cn.zealon.book.common.result.Result;
 import cn.zealon.book.common.result.util.ResultUtil;
 import cn.zealon.book.common.utils.CommonUtil;
-import cn.zealon.book.common.utils.IPUtil;
+import cn.zealon.book.common.utils.IpUtils;
 import cn.zealon.book.common.utils.Utils;
 import cn.zealon.book.system.attachment.dao.SysAttachmentMapper;
 import cn.zealon.book.system.attachment.entity.SysAttachment;
 import cn.zealon.book.system.security.shiro.util.UserUtil;
+import com.alibaba.druid.util.DruidWebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +29,8 @@ import java.util.*;
  */
 @Service
 public class UploadService {
+
+    protected final Logger LOGGER = LoggerFactory.getLogger(UploadService.class);
 
     @Autowired
     private SystemPropertiesConfig systemPropertiesConfig;
@@ -94,14 +99,16 @@ public class UploadService {
 
         // 白名单正常返回，否则返回指定图片(防止网友上传禁图显示出来)
         Map<String,Object> data = new HashMap<>();
-        String ip = IPUtil.getIpAddr(request);
+        String ip = IpUtils.getIpAddress(request);
         if (!white(ip)) {
+            Map<String, Object> att = attachments.get(0);
             attachments.remove(0);
             Map<String,Object> attachment = new HashMap<>();
             attachment.put("id","220c9298f6474db088f54356bf9a21fc");
             attachment.put("path","attachment/2020-03-18/220c9298f6474db088f54356bf9a21fc.jpg");
             attachments.add(attachment);
             data.put("attachments",attachments);
+            LOGGER.info("网友[{}]上传{}",ip,att.get("path"));
             return ResultUtil.success(data).buildMessage("图片已上传，由于演示系统是公开的，指定了默认图片哦，请谅解~");
         }
         // 返回结果
