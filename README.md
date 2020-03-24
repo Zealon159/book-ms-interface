@@ -104,6 +104,8 @@
 
 登录身份授权使用了 Shiro 安全框架实现，Shiro 核心组件说明：
 
+核心组件说明：
+
 | 组件               | 说明                                                         |
 | ------------------ | ------------------------------------------------------------ |
 | SecurityManager    | 安全管理器，图中没有对此说明，但安全管理器又起到了最重要的作用，它对 所有组件起到统一管理的作用。可以理解为Shiro架构本身。 |
@@ -124,7 +126,7 @@
 
 #### 实体层
 
-实体类继承 BaseEntity 即可，不需要有 id、创建时间等属性，都在父类中实现。
+实体类继承 `BaseEntity` 即可，不需要有 id、创建时间等属性，都在父类中实现。
 
 #### 持久层
 
@@ -132,7 +134,7 @@
 
 ```
 public interface OrgDeptMapper extends BaseMapper<OrgDept> {
-		/** 获取部门数据源 */
+    /** 获取部门数据源 */
     @Select("select id,name text from org_dept order by sort_number")
     List<SelectVO> getDeptSelect();
 }
@@ -174,7 +176,7 @@ public Result deleteById(Integer id) {
 @RestController
 @RequestMapping("system/org/dept")
 public class OrgDeptController extends BaseController {
-	// ...
+    // your code ...
 }
 ```
 
@@ -216,4 +218,71 @@ public Result create(){
     // 等等...
 }
 ```
+
+#### 分页
+
+分页响应结果封装到了了 `PageVO` 里，分页服务定义此类为返回值。
+
+系统使用了分页插件实现分页，如下示例：
+
+```
+public PageVO<User> getPageList(Params params) {
+   Integer page = params.getInt("page");
+   Integer limit = params.getInt("limit");
+   PageHelper.startPage(page, limit);
+   Page<User> pageList = (Page<User>) this.mapper.selectAll();
+   return new PageVO<>(pageList.getTotal(),200,"",pageList);
+}
+```
+
+只要在DB读取的代码上面加上  `PageHelper.startPage(page, limit);` 即可实现分页SQL处理，SQL语句无需填写 `limit {#start},{#limit}` 的限制。
+
+#### 大数据量分页
+
+这种普通的分页，在数据量不太多的情况下还可以，若数据量达到大几十万、或百万以上级别，性能就明显慢了，且随着数据量的增加越来越慢，所以建议不能再用这种普通的分页方式了。
+
+普通的分页：
+
+```
+SELECT user_name,user_id FROM org_user where dept_id=2 
+ORDER BY user_id asc LIMIT 5000000 ,100 
+```
+
+原因是limit 这种方式，会遍历前面无关的 5000000 行数据，再向后查询100条，所以当数据量越大就会越慢咯。那么我们跳过前面5000000 行无关的数据页遍历，可以直接通过索引定位到第5000001，第5000002行，这样操作是不是更快了可以优化为快速定位要访问的数据行，如：
+
+```
+SELECT a.user_name,a.user_id FROM org_user a, 
+(select user_id from org_user where dept_id=2 ORDER BY user_id asc LIMIT 5000000 ,100 ) b 
+where a.user_id = b.user_id;
+```
+
+这样数据库查询引擎会通过索引跳过无关数据行，然后查询相关数据行了，当然查询条件必须要命中索引才行。
+
+抛砖引玉，如果海量数据分页，就不建议单存使用数据库实现了，可以考虑用使用缓存+数据库的、或缓存等的方式。
+
+> 在我们生产环境，使用索引定位行的方式优化过大数据量分页查询，总数据量在8000W行左右，没优化前查询一次平均需要用200秒才能查完，优化后只要3秒左右。
+
+#### 线程池
+
+目前系统没有用到线程池的业务，但是已经配置了一个公共线程池，在一些需要异步执行的业务上可以直接使用（如业务数据写入之后，异步发送通知、异步记录日志等）。配置位置：`common.config.ThreadPoolConfig` ，可以自定义线程数等参数、名称。使用的时候直接引用，如：
+
+```
+@Autowired
+private ExecutorService messageQueueThreadPool;
+
+private void sendMsg(){
+    this.messageQueueThreadPool.execute(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("推送消息");
+        }
+    });
+}
+```
+
+## License
+
+[MIT](https://github.com/Zealon159/book-ms-interface/blob/master/LICENSE)
+
+Copyright (c) 2020 光彩盛年
 
